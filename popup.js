@@ -89,7 +89,6 @@ function init() {
                         newPasswordInput.value = '';
                         confirmPasswordInput.value = '';
                     } else {
-                        console.error("Password does not match or is too short (min 8 chars suggested).");
                         alert('Password does not match or is too short (min 8 chars suggested). Please try again.');
                         
                         newPasswordInput.value = '';
@@ -112,10 +111,10 @@ function init() {
             if (seed) {
                 // Sử dụng Clipboard API để copy
                 navigator.clipboard.writeText(seed).then(() => {
-                    alert('Đã sao chép Seed Phrase vào clipboard!');
+                    alert('Copied!');
                 }).catch(err => {
                     console.error('Không thể sao chép: ', err);
-                    alert('Không thể sao chép. Vui lòng sao chép thủ công.');
+                    alert('Copy error! Please copy manually.');
                 });
             }
         });
@@ -198,7 +197,7 @@ function init() {
                     resetMnemonicInputs();
 
                 } else {
-                    alert('Vui lòng nhập đủ 12 từ Seed Phrase.');
+                    alert('Please enter all 12 Seed Phrases.');
                 }
             } else if (currentIndex < 12) {
                 // Nếu Enter ở ô 1-11, chuyển đến ô tiếp theo
