@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Wallet</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+
+<body>
+    <div class="Wallet-Interface"> 
+        <div id="welcomeScreen" class="screen active">
+            <button id="createWalletBtn" class="action-button created-button">
+                CREATE <br> NEW WALLET
+            </button>
+            <p class="note">
+                Mandatory: Save the 12 Seed-Phrases
+            </p>
+
+            <button id="importWalletBtn" class="action-button imported-button">
+                <span class="description">Already have?</span><br>
+                Import wallet
+            </button>
+        </div>
+
+        <div id="importMnemonicScreen" class="screen hidden form-screen">
+            <h2 class="title">Import Wallet</h2>
+            <p class="description">Enter your 12-word recovery phrase:</p>
+
+            <div id="mnemonicInputGrid" class="seed-phrase-grid input-grid">
+                <div class="seed-item"><span class="seed-number">1.</span><input type="text" data-index="1" maxlength="15"></div>
+                <div class="seed-item"><span class="seed-number">2.</span><input type="text" data-index="2" maxlength="15"></div>
+                <div class="seed-item"><span class="seed-number">3.</span><input type="text" data-index="3" maxlength="15"></div>
+                <div class="seed-item"><span class="seed-number">4.</span><input type="text" data-index="4" maxlength="15"></div>
+                <div class="seed-item"><span class="seed-number">5.</span><input type="text" data-index="5" maxlength="15"></div>
+                <div class="seed-item"><span class="seed-number">6.</span><input type="text" data-index="6" maxlength="15"></div>
+                <div class="seed-item"><span class="seed-number">7.</span><input type="text" data-index="7" maxlength="15"></div>
+                <div class="seed-item"><span class="seed-number">8.</span><input type="text" data-index="8" maxlength="15"></div>
+                <div class="seed-item"><span class="seed-number">9.</span><input type="text" data-index="9" maxlength="15"></div>
+                <div class="seed-item"><span class="seed-number">10.</span><input type="text" data-index="10" maxlength="15"></div>
+                <div class="seed-item"><span class="seed-number">11.</span><input type="text" data-index="11" maxlength="15"></div>
+                <div class="seed-item"><span class="seed-number">12.</span><input type="text" data-index="12" maxlength="15"></div>
+            </div>
+            
+            <button id="resetMnemonicBtn" class="action-button reset-button">
+                RESET
+            </button>
+
+            <button class="back-button" data-target="welcomeScreen">← Back</button>
+        </div>
+
+        <div id="createPasswordScreen" class="screen hidden form-screen">
+            <h2 class="title">Create Password</h2>
+            <div class="form-control">
+                <label for="newPassword">New Password:</label>
+                <input type="password" id="newPassword" required>
+            </div>
+            <div class="form-control">
+                <label for="confirmPassword">Confirm Password:</label>
+                <input type="password" id="confirmPassword" required>
+            </div>
+            <button class="back-button" data-target="welcomeScreen">← Back</button>
+        </div>
+
+        <div id="showSeedScreen" class="screen hidden form-screen">
+            <h2 class="title">SAVE YOUR SEED PHRASE</h2>
+            <p class="warning-text">Write down these 12 words and keep them safe.<br><strong>NEVER</strong> share them.</p>
+
+            <div id="seedPhraseDisplay" class="seed-phrase-grid">
+            </div>
+
+            <button id="copySeedBtn" class="action-button copy-button">
+                <span class="icon">📋</span> COPY TO CLIPBOARD
+            </button>
+    
+            <button id="seedPhraseSavedBtn" class="action-button saved-button">
+                I HAVE SAVED IT SAFELY
+            </button>
+        </div>
+
+        <div id = "HOMEPAGE" class="wallet-container screen hidden">        
+            <div class="header-section">
+                <div class="button primary-button">TÊN VÍ</div>
+                <div class="button secondary-button">SEPOLIA</div>
+            </div>
+
+            <div class="balance-section">
+                <div class="eth-label">ETH</div>
+                <div class="balance-display">0.005</div>
+            </div>
+
+            <div class="history-label">HISTORY</div>
+            <div class="history-content">
+            </div>
+
+            <div class="action-buttons">
+                <button class="action-button send-button">SEND</button>
+                <button class="action-button receive-button">RECEIVE</button>
+            </div>
+        </div>
+    </div>
+    <script src="popup.js"></script>
+</body>
+</html>
