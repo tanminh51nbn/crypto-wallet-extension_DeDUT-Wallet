@@ -1,16 +1,17 @@
 html, body {
     margin: 0;
     padding: 0;
-    width: 399px; 
-    height: 599px;
+    min-width: 400px; 
+    min-height: 600px;
     overflow: hidden;
     box-sizing: border-box; 
     font-family: 'Arial', sans-serif;
 }
 body {
-    min-height: 100vh;
-    background-color: #0000CC; /* Màu nền xanh đậm của ví */
-    border: 4px solid #FFFF00; /* Viền vàng */
+    display: flex;
+    justify-content: center;
+    background-color: #0000CC;
+    border: 4px solid #FFFF00;
 }
 @keyframes bounce {
     0%, 20%, 50%, 80%, 100% {
@@ -18,6 +19,10 @@ body {
     } 20% {
         transform: translateY(-5px);
     }
+}
+.Wallet-Interface {
+    width: 390px;
+    height: 590px;
 }
 .screen.hidden {
     display: none !important; 
@@ -63,38 +68,32 @@ body {
 .title{
     color: #FFFF00;
     font-size: 2.5em;
-    display: flex;
-    align-items: flex-start;
-    margin-top: 75px;
-    margin-bottom: 100px;
     font-weight: bold;
-}
-
-.Wallet-Interface {
-    width: 400px;
-    height: 600px;
+    height: 90px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
 }
 /*--------------------------------------------------------------------------*/
-#welcomeScreen, #importScreen {
-    flex-direction: column;
-    align-items: center;
-    height: 100%;
-    gap: 20px;
-}
+
 #welcomeScreen{
     justify-content: center;
+    flex-direction: column;
+    height: 100%;
+    gap: 20px;
+    align-items: center;
 }
-.description{
-    font-size: 0.8em;
-    opacity: 0.6;
-}
+
 #createWalletBtn, #importWalletBtn {
     background-color: #FFFF00;
     color: #0000CC;
     font-size: 2.5em; 
     font-weight: bold;
     padding: 15px 20px;
-    margin-right: 10px;
+}
+.des{
+    font-size:0.9em;
+    opacity:0.7;
 }
 .note {
     background-color: #7B68EE;
@@ -110,41 +109,28 @@ body {
     text-align: center;
 }
 /*--------------------------------------------------------------------------*/
-#importScreen{
-    margin-right: 10px;
-}
-#importMnemonicBtn, #importPrivateBtn {
-    background-color: #FFFF00;
-    color: #0000CC;
-    font-size: 2.5em; 
-    font-weight: bold;
-    padding: 15px 20px;
-}
-#importPrivateBtn {
-    margin-top: -50px;
-}
-/*--------------------------------------------------------------------------*/
-#createPasswordScreen{
+#createPasswordScreen {
     flex-direction: column;
+}
+.form-group{
+    gap: 20px;
+    height: 225px;
+    width: 100%;
     align-items: center;
-    height: 100%;
-    gap: 1px;
-    margin-right: 10px;
+    justify-items: center;
+    align-content: flex-end;
 }
 .form-control{
     width: 80%;
-    padding: 8px;
+    padding: 10px;
     font-size: 1.5em;
     border: 2px solid #FFFF00;
     border-radius: 10px;
-    margin-top: 25px;
+
 }
 #confirmPassword, #newPassword{
-    display: flex;
     width: 100%;
-    align-items: center;
     box-sizing: border-box;
-    padding-right: 10px;
 }
 label[for="newPassword"],
 label[for="confirmPassword"] {
@@ -152,53 +138,72 @@ label[for="confirmPassword"] {
     font-weight: bold;
     color: #FFFF00;
 }
+
+
 /*--------------------------------------------------------------------------*/
-#showSeedScreen {
+#importMnemonicScreen{
+    width:100%;
     flex-direction: column;
+    justify-content: center;
+    display: flex;             
     align-items: center;
-    margin-right: 10px;
 }
+.description {
+    color:#FFFF00;
+    font-size: 16px;
+    opacity: 0.8;
+    display:flex;
+    font-weight: bold;
+    justify-content: center;
+}
+
+
+/*--------------------------------------------------------------------------*/
+#showSeedCreatedScreen {
+    width: 100%;
+    flex-direction: column;
+    justify-content: center;
+}
+
 .seed-phrase-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 10px;
+
     padding: 10px;
     background-color: #FFFF00;
     border-radius: 20px;
-    margin-bottom: 20px;
-    margin-right: 10px;
-    margin-left: 10px;
+    border: 3px solid #8f8c00;
+    margin: 15px;
 }
 /* in popup.js/displaySeedPhrase() */
 .seed-item {
-    display: flex;
+    display:inline-flex;
     align-items: center;
-    padding: 5px 7px;
     border: 1px solid #8f8c00;
-    border-radius: 10px;
     background-color: #f1ffb4;
-    font-size: 15px;
-    font-weight: 500;
+    font-size: 14px;
+    
+    padding: 8px;
+    border-radius: 12px;
 }
 .seed-number {
     font-weight: bold;
     color: #242424;
-    margin-right: 8px;
-    min-width: 25px;
+    margin-right: 7px;
+    margin-left: -5px;
     text-align: right;
+    width:20px;
 }
-.seed-word-display, 
-.seed-item input[type="text"] {
+.seed-word{
     color: #0000CC;
-    font-size: 15px;
-    font-weight: 500;
     text-transform: lowercase;
-    
-    flex-grow: 1;
-    border: none;
+    font-weight: 567;
+    margin-right: 3px;
+}
+.seed-item input[type="text"] {
     background-color: transparent;
-    padding: 0;
-    margin: 0;
+    border: none;
     outline: none;
     width: 100%;
 }
@@ -207,26 +212,28 @@ label[for="confirmPassword"] {
     color: #FF0000;
     text-align: center;
     font-size: 16px;
-    margin-top: -30px;
+    height:20px;
+    margin-top: 30px;
 }
 
-#copySeedBtn, #seedPhraseSavedBtn {
-    background-color: #FFFF00;
-    color: #0000CC;
-    font-size: 1.5em; 
-    font-weight: bold;
-    padding: 10px 15px;
-    margin-bottom: 10px;
-}
-@media (min-width: 400px) {
-    .seed-phrase-grid {
-        grid-template-columns: repeat(4, 1fr); 
-    }
-}
-/*--------------------------------------------------------------------------*/
-#importMnemonicScreen{
+.copy-save {
+    display: flex;             
     flex-direction: column;
     align-items: center;
-    margin-right: 10px;
+    margin-top: 35px;
 }
-
+.copy-button, .saved-button {
+    background-color: #FFFF00;
+    color: #0000CC;
+    font-size: 17px; 
+    font-weight: bold;
+    padding: 5px 12px;
+}
+.reset-button{
+    background-color: #FFFF00;
+    color: #0000CC;
+    font-size: 17px; 
+    font-weight: bold;
+    padding: 5px 12px;
+    width: 50%;
+}

@@ -1,115 +1,65 @@
-function showScreen(targetId) {
-    // 1. Lấy tất cả các màn hình
-    const screens = document.querySelectorAll('.screen');
-    
-    // 2. Ẩn tất cả các màn hình
-    screens.forEach(screen => {
-        screen.classList.remove('active');
-        screen.classList.add('hidden');
-    });
 
-    // 3. Hiện màn hình mục tiêu
-    const targetScreen = document.getElementById(targetId);
-    if (targetScreen) {
-        targetScreen.classList.remove('hidden');
-        targetScreen.classList.add('active');
+
+const $ = selector => document.querySelector(selector);
+const $$ = selector => document.querySelectorAll(selector);
+
+const DOM = {
+    Common: {
+        backButtons: $$('.back-button'),
+    },
+    start: {
+        createWalletBtn: $('#createWalletBtn'),
+        importWalletBtn: $('#importWalletBtn'),
+    },
+    password: {
+        newPasswordInput: $('#newPassword'),
+        confirmPasswordInput: $('#confirmPassword'),
+    },
+    importMnemonic: {
+        mnemonicInputGrid: $('#mnemonicInputGrid'),
+        resetMnemonicBtn: $('#resetMnemonicBtn'),
+    },
+    createMnemonic:{
+        copySeedBtn: $('#copySeedBtn'),
+        seedPhraseSavedBtn: $('#seedPhraseSavedBtn'),
+    },
+    MnemonicGridDisplay: {
+        CreateSeedPhraseDisplay: $('#CreateSeedPhraseDisplay'),
+        ImportSeedPhraseDisplay: $('#ImportSeedPhraseDisplay'),
     }
-}
+};
+//giả lập
+const seedPhrases = [
+    'apple', 'banana', 'cherry', 'date', 'elderberry', 'fig',
+    'grape', 'honeydew', 'kiwi', 'lemon', 'mango', 'nectarine'
+];
 
-function displaySeedPhrase(seedPhrase) {
-    const displayElement = document.getElementById('seedPhraseDisplay');
-    if (!displayElement) return;
-
-    displayElement.innerHTML = ''; // Xóa nội dung cũ
-
-    seedPhrase.forEach((word, index) => {
-        const seedItem = document.createElement('div');
-        seedItem.classList.add('seed-item'); // Dùng class tương tự
-        
-        // Số thứ tự
-        const numberSpan = document.createElement('span');
-        numberSpan.classList.add('seed-number');
-        numberSpan.textContent = `${index + 1}.`;
-
-        // Từ (Sử dụng span để hiển thị thay vì input)
-        const wordDisplay = document.createElement('span'); 
-        wordDisplay.classList.add('seed-word-display'); // Class mới cho từ hiển thị
-        wordDisplay.textContent = word;
-
-        seedItem.appendChild(numberSpan);
-        seedItem.appendChild(wordDisplay); // Thêm span hiển thị
-        
-        displayElement.appendChild(seedItem);
-    });
-
-    // Lưu Seed Phrase vào bộ nhớ tạm thời để xử lý nút Copy
-    displayElement.dataset.seed = seedPhrase.join(' ');
-}
-
+let stateLogin=false;
+let currentAction = null;
+let show;
 function init() {
-    const createWalletBtn = document.getElementById('createWalletBtn');
-    const importWalletBtn = document.getElementById('importWalletBtn');
-    const backToWelcomeBtn = document.querySelectorAll('.back-button');
+    show=new Show();
     
-    const createPasswordScreen = document.getElementById('createPasswordScreen');
-    const newPasswordInput = document.getElementById('newPassword');
-    const confirmPasswordInput = document.getElementById('confirmPassword');
-
-    const seedPhraseSavedBtn = document.getElementById('seedPhraseSavedBtn');
-    const copySeedBtn = document.getElementById('copySeedBtn');
-    const seedPhraseDisplay = document.getElementById('seedPhraseDisplay');
-    
-    const mnemonicInputGrid = document.getElementById('mnemonicInputGrid');
-    const mnemonicInputs = mnemonicInputGrid ? mnemonicInputGrid.querySelectorAll('input[type="text"]') : [];
-    const resetMnemonicBtn = document.getElementById('resetMnemonicBtn');
-
-    if (createWalletBtn) {
-        createWalletBtn.addEventListener('click', () => {
-            showScreen('createPasswordScreen');
-            CreatePassword('showSeedScreen');
+    if(DOM.start.createWalletBtn) {
+        DOM.start.createWalletBtn.addEventListener('click', () => {
+            currentAction = 'create';
+            show.Screen('createPasswordScreen');
         });
     }
-    function CreatePassword(IDScreen) {
-        if (createPasswordScreen && newPasswordInput && confirmPasswordInput) {
-            confirmPasswordInput.addEventListener('keypress', (event) => {
-                if (event.key === 'Enter') {
-                    event.preventDefault(); // Ngăn chặn hành vi submit form mặc định
-                    
-                    const newPass = newPasswordInput.value;
-                    const confirmPass = confirmPasswordInput.value;
-
-                    if (newPass === confirmPass && newPass.length >= 8) {
-                        showScreen(IDScreen);
-
-                        //Giả sử
-                        const seedPhrase = ["abandon", "ability", "about", "above", "absent", "absorb", "abstract", "abuse", 
-        "access", "account", "accuse", "achieve"];
-                        displaySeedPhrase(seedPhrase);
-                        
-                        newPasswordInput.value = '';
-                        confirmPasswordInput.value = '';
-                    } else {
-                        alert('Password does not match or is too short (min 8 chars suggested). Please try again.');
-                        
-                        newPasswordInput.value = '';
-                        confirmPasswordInput.value = '';
-                        newPasswordInput.focus();
-                    }
-                }
-            });
-        }
-    }
     
-    if (seedPhraseSavedBtn) {
-        seedPhraseSavedBtn.addEventListener('click', () => {
-            showScreen('HOMEPAGE'); // Chuyển sang Trang chủ
+    if(DOM.start.importWalletBtn) {
+        DOM.start.importWalletBtn.addEventListener('click', () => {
+            currentAction = 'import';
+            show.Screen('createPasswordScreen');
         });
     }
-    if (copySeedBtn && seedPhraseDisplay) {
-        copySeedBtn.addEventListener('click', () => {
-            const seed = seedPhraseDisplay.dataset.seed;
+    if(DOM.password.newPasswordInput && DOM.password.confirmPasswordInput) {
+        setupPasswordEnter(DOM.password.newPasswordInput, DOM.password.confirmPasswordInput);
+    }
+    if (DOM.createMnemonic.copySeedBtn) {
+        DOM.createMnemonic.copySeedBtn.addEventListener('click', () => {
+            const seed = seedPhrases.join(' ');
             if (seed) {
-                // Sử dụng Clipboard API để copy
                 navigator.clipboard.writeText(seed).then(() => {
                     alert('Copied!');
                 }).catch(err => {
@@ -119,122 +69,226 @@ function init() {
             }
         });
     }
-//-----------------------------------------------------------------------------------------------
-    if (importWalletBtn) {
-        importWalletBtn.addEventListener('click', () => {
-            showScreen('importMnemonicScreen'); 
+
+    if (DOM.createMnemonic.seedPhraseSavedBtn) {
+        DOM.createMnemonic.seedPhraseSavedBtn.addEventListener('click', () => {
+            show.Screen('HOMEPAGE'); 
         });
     }
-    function areAllMnemonicInputsFilled() {
-        if (mnemonicInputs.length !== 12) return false;
-        for (const input of mnemonicInputs) {
-            // Kiểm tra xem ô có giá trị và không rỗng
-            if (!input.value.trim()) {
-                return false;
+    if (DOM.importMnemonic.resetMnemonicBtn) {
+        DOM.importMnemonic.resetMnemonicBtn.addEventListener('click', () => {
+            const allInputs = document.querySelectorAll('#ImportSeedPhraseDisplay .seed-word');
+    
+            allInputs.forEach(input => {
+                input.value = '';
+            });
+            
+            if (allInputs.length > 0) {
+                allInputs[0].focus();
             }
+        });
+    }
+    
+        //Logic Back
+    DOM.Common.backButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            if (button.getAttribute('data-target') === 'welcomeScreen') {
+                 currentAction = null; 
+            }
+            show.Screen(button.getAttribute('data-target') || 'welcomeScreen');
+        });
+    });
+}
+
+function checkIfMnemonicComplete() {
+    const allInputs = document.querySelectorAll('#ImportSeedPhraseDisplay .seed-word');
+    
+    let isComplete = true;
+    let filledCount = 0;
+    
+    allInputs.forEach(input => {
+        if (input.value.trim() === '') {
+            isComplete = false;
+        } else {
+            filledCount++;
         }
+    });
+
+    if (isComplete && filledCount === 12) {
+        setTimeout(() => {
+            const savedPassword = 'Mật khẩu đã nhập ở bước trước'; 
+            handleImportWallet(savedPassword); 
+            // -----------------------------
+        }, 100);
+        
         return true;
     }
-    function handleSmartPaste(event) {
-        // Chỉ xử lý nếu event là paste
-        if (event.type !== 'paste') return; 
+    return false;
+}
+function handleMnemonicPaste(event) {
+    event.preventDefault(); 
+    
+    const pastedData = event.clipboardData.getData('text');
+    const words = pastedData.trim().split(/\s+/); 
 
-        const clipboardData = event.clipboardData || window.clipboardData;
-        // Lấy nội dung clipboard, loại bỏ khoảng trắng thừa
-        const pastedText = clipboardData.getData('Text').trim();
-        // Tách chuỗi thành mảng các từ bằng khoảng trắng
-        const words = pastedText.split(/\s+/).filter(word => word.length > 0); 
+    if (words.length === 0) return; // Không có từ nào
 
-        // Nếu có nhiều hơn 1 từ, thực hiện dán thông minh
-        if (words.length > 1) {
-            event.preventDefault(); // Ngăn chặn hành vi dán mặc định
+    const currentInput = event.target;
+    const allInputs = document.querySelectorAll('#ImportSeedPhraseDisplay .seed-word');
 
-            // Lấy index của ô input hiện tại (dùng data-index)
-            const currentInput = event.target;
-            const startIndex = parseInt(currentInput.getAttribute('data-index')) - 1; // index trong mảng (0-11)
+    let startIndex = -1;
+    for (let i = 0; i < allInputs.length; i++) {
+        if (allInputs[i] === currentInput) {
+            startIndex = i;
+            break;
+        }
+    }
+    
+    for (let i = 0; i < words.length; i++) {
+        const targetIndex = startIndex + i;
+        
+        if (targetIndex < allInputs.length) { 
+            allInputs[targetIndex].value = words[i];
+        } else {
+            break; 
+        }
+    }
+    
+    if (startIndex + words.length < allInputs.length) {
+        allInputs[startIndex + words.length].focus();
+    }
+}
+function setupPasswordEnter(newPasswordInput, confirmPasswordInput) {
+    newPasswordInput.addEventListener('keypress', (event) => {
+        handleEnterSubmit(event, () => { 
+            confirmPasswordInput.focus();
+        });
+    });
+    confirmPasswordInput.addEventListener('keypress', (event) => {
+        handleEnterSubmit(event, () => {
+            handlePasswordCheck(newPasswordInput, confirmPasswordInput);
+        });
+    });
+}
+function handlePasswordCheck(newPasswordInput, confirmPasswordInput) {
+    const newPass = newPasswordInput.value;
+    const confirmPass = confirmPasswordInput.value;
 
-            for (let i = 0; i < words.length; i++) {
-                const inputIndex = startIndex + i;
-                if (inputIndex < mnemonicInputs.length) {
-                    // Điền từ vào ô input tương ứng
-                    mnemonicInputs[inputIndex].value = words[i];
-                }
-            }
+    if (newPass === confirmPass && newPass.length >= 8) {
+        // ... (Logic lưu mật khẩu,)
+
+        newPasswordInput.value = '';
+        confirmPasswordInput.value = '';
+
+        stateLogin=true;
+        if (currentAction == 'create') {
+            displaySeedPhrase(seedPhrases, 'CreateSeedPhraseDisplay', 'display');
+            show.Screen('showSeedCreatedScreen'); 
+        } else if (currentAction == 'import') {
+            displaySeedPhrase([], 'ImportSeedPhraseDisplay', 'input'); 
+            show.Screen('importMnemonicScreen'); 
+        }
+    } else {
+        newPasswordInput.value = '';
+        confirmPasswordInput.value = '';
+        newPasswordInput.focus();
+    }
+}
+function handleEnterSubmit(event, callback) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        callback();
+    }
+}
+function displaySeedPhrase(seedPhrase, targetKey, action) {
+    const displayElement = DOM.MnemonicGridDisplay[targetKey];
+    if (!displayElement) return;
+
+    displayElement.innerHTML = '';
+
+    let loopCount = seedPhrase.length;
+    if (action === 'input') {
+        loopCount = Math.max(12, seedPhrase.length);
+    }
+
+    for (let index = 0; index < loopCount; index++) {
+        const word = seedPhrase[index] || ''; 
+        
+        const seedItem = document.createElement('div');
+        seedItem.classList.add('seed-item');
+        
+        const number = document.createElement('span');
+        number.classList.add('seed-number');
+        number.textContent = `${index + 1}.`;
+        seedItem.appendChild(number);
+
+        if(action=='display'){
+            const wordDisplay = document.createElement('span'); 
+            wordDisplay.classList.add('seed-word'); 
+            wordDisplay.textContent = word;
+            seedItem.appendChild(wordDisplay);
+        }
+        if((action=='input')){
+            const wordDisplay = document.createElement('input'); 
+            wordDisplay.type = 'text';
+            wordDisplay.dataset.index = index + 1;
+            wordDisplay.classList.add('seed-word');
+
+            wordDisplay.addEventListener('paste', handleMnemonicPaste);
+            wordDisplay.addEventListener('paste', handleMnemonicPaste); 
+            wordDisplay.addEventListener('keyup', checkIfMnemonicComplete);
             
-            // Di chuyển focus đến ô cuối cùng nếu điền đủ
-            const lastFilledIndex = startIndex + words.length - 1;
-            if (lastFilledIndex < mnemonicInputs.length - 1) {
-                mnemonicInputs[lastFilledIndex + 1].focus();
-            } else {
-                // Nếu 12 ô đã điền, focus vào ô cuối cùng (để người dùng Enter)
-                mnemonicInputs[11].focus();
-            }
+            seedItem.appendChild(wordDisplay);
         }
-    }
-    function handleEnterKey(event) {
-        if (event.key === 'Enter') {
-            const currentInput = event.target;
-            const currentIndex = parseInt(currentInput.getAttribute('data-index'));
 
-            // Chỉ xử lý Enter ở ô thứ 12
-            if (currentIndex === 12) {
-                event.preventDefault(); 
-                
-                // Kiểm tra đủ 12 từ
-                if (areAllMnemonicInputsFilled()) {
-                    
-                    // --- GHI CHÚ: Logic xác thực Seed Phrase sẽ được thêm vào ĐÂY ---
-                    // if (validateSeedPhrase(mnemonicInputs.map(i => i.value))) {
-                    //     showScreen('createPasswordScreen');
-                    // } else {
-                    //     alert('Seed Phrase không hợp lệ. Vui lòng kiểm tra lại.');
-                    // }
-                    
-                    // Hiện tại, giả định là đúng và chuyển sang tạo mật khẩu
-                    showScreen('createPasswordScreen');
-                    CreatePassword('HOMEPAGE')
-                    // Xóa các ô nhập sau khi chuyển màn hình (giữ cho sạch sẽ)
-                    resetMnemonicInputs();
+        displayElement.appendChild(seedItem);
+    }
+    //Lưu trữ ở đây
+}
+class Show {
+    constructor() {
+        this.majorScreens = document.querySelectorAll('.screen');
+        this.currentScreenId = null;
+        this.toastTimeoutHandle = null;
+    }
+    _Switch(IDscreen) {
+        if (this.toastTimeoutHandle) {
+             clearTimeout(this.toastTimeoutHandle);
+             this.toastTimeoutHandle = null;
+        }
+        this.majorScreens.forEach(screen => {
+            screen.classList.remove('active');
+            screen.classList.add('hidden');
+        });
+        const targetScreen = document.getElementById(IDscreen);
+        if (targetScreen) {
+            targetScreen.classList.remove('hidden');
+            targetScreen.classList.add('active');
+            this.currentScreenId = IDscreen;
+        }
+    }
+    Screen(IDscreen) {
+        this._Switch(IDscreen);
+    }
+    Notify(IDscreen, durationMs = 1500) {
+        const targetNotification = document.getElementById(IDscreen);
 
-                } else {
-                    alert('Please enter all 12 Seed Phrases.');
-                }
-            } else if (currentIndex < 12) {
-                // Nếu Enter ở ô 1-11, chuyển đến ô tiếp theo
-                event.preventDefault();
-                mnemonicInputs[currentIndex].focus();
-            }
+        if (this.toastTimeoutHandle) {
+            clearTimeout(this.toastTimeoutHandle);
         }
-    }
-    function resetMnemonicInputs() {
-        mnemonicInputs.forEach(input => input.value = '');
-        if (mnemonicInputs.length > 0) {
-            mnemonicInputs[0].focus(); // Focus vào ô đầu tiên
-        }
-    }
-    if (mnemonicInputGrid) {
-        mnemonicInputs.forEach(input => {
-            // Lắng nghe sự kiện paste
-            input.addEventListener('paste', handleSmartPaste);
-            // Lắng nghe sự kiện keypress (để xử lý Enter)
-            input.addEventListener('keypress', handleEnterKey);
-        });
-    }
-    if (resetMnemonicBtn) {
-        resetMnemonicBtn.addEventListener('click', resetMnemonicInputs);
-    }
-//-----------------------------------------------------------------------------------------------
-    if (backToWelcomeBtn) {
-        backToWelcomeBtn.forEach(button => {
-            button.addEventListener('click', () => {
-                const targetScreenId = button.getAttribute('data-target');
-                if (targetScreenId) {
-                    showScreen(targetScreenId);
-                } else {
-                    showScreen('welcomeScreen');
-                }
-            });
-        });
+
+        targetNotification.classList.remove('hidden');
+        targetNotification.classList.add('active');
+
+        this.toastTimeoutHandle = setTimeout(() => {
+            targetNotification.classList.remove('active');
+            
+            setTimeout(() => {
+                targetNotification.classList.add('hidden');
+                this.toastTimeoutHandle = null; 
+            }, 500); 
+            
+        }, durationMs);
     }
 }
 document.addEventListener('DOMContentLoaded', init);
