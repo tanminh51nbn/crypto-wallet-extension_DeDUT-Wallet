@@ -4,12 +4,18 @@
   "version": "1.0",
   "description": "A Ethereum Sepolia Wallet demo by DUT STUDENTS",
   "action": {
-    "default_popup": "popup.html",
+    "default_popup": "popup/popup.html",
     "default_icon": {
       "128": "icons/icon128.png"
     }
   },
+  "icons": {
+    "128": "icons/icon128.png"
+  },
   "permissions": [
     "storage" 
-  ]
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  }
 }

@@ -1,0 +1,32 @@
+{
+  "name": "mycryptowallet",
+  "version": "1.0.0",
+  "description": "",
+  "main": "cryptoUtils.js",
+  "scripts": {
+    "build-popup": "rollup -c"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tanminh51nbn/crypto-wallet-extension_DeDUT-Wallet.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/tanminh51nbn/crypto-wallet-extension_DeDUT-Wallet/issues"
+  },
+  "homepage": "https://github.com/tanminh51nbn/crypto-wallet-extension_DeDUT-Wallet#readme",
+  "dependencies": {
+    "ethers": "^6.11.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.24.0",
+    "@babel/preset-env": "^7.24.0",
+    "@rollup/plugin-babel": "^6.0.4",
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "rollup": "^4.12.0"
+  }
+}
