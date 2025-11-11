@@ -237,3 +237,63 @@ label[for="confirmPassword"] {
     padding: 5px 12px;
     width: 50%;
 }
+/*--------------------------------------------------------------------------*/
+.notification-toast {
+    position: fixed;
+    bottom: 12px;
+    z-index: 1000;
+    right: 10px;
+    min-width: 250px;
+    padding: 10px 15px;
+    border-radius: 10px;
+    
+    background-color: #333;
+    color: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+
+    transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+}
+.notification-toast.hidden {
+    display: none;
+    opacity: 0;
+    transform: translateX(100%); 
+}
+
+.notification-toast.active {
+    display: flex; 
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.icon-success {
+    font-size: 20px;
+    color: white;
+    line-height: 1;
+}
+.icon-error {
+    font-size: 50px;
+    color: #6d0000;
+    line-height: 1;
+    margin-top: 5px;
+}
+
+.message {
+    font-weight: bold;
+    display: block;
+    font-size: 15px;
+}
+
+.notification-toast.error {
+    background-color: #ff4646;
+}
+#copySuccessNotification {
+    background-color: #4CAF50;
+}
+#ErrorCreatingPasswordNotification{
+    background-color: #ff4646;
+}

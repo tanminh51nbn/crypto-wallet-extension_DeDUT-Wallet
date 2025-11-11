@@ -68,6 +68,27 @@
             </div>
         </div>
 
+        <div id="copySuccessNotification" class="notification-toast hidden">
+            <div class="icon-success">✔</div>
+            <div class="message">
+                Copied!
+            </div>
+        </div>
+
+        <div id="incorrectMnemonicNotification" class="notification-toast error hidden">
+            <div class="icon-error">✖</div>
+            <div class="message">
+                Invalid seed phrase! <br> Please reset & try again.
+            </div>
+        </div>
+
+        <div id="ErrorCreatingPasswordNotification" class="notification-toast error hidden">
+            <div class="icon-error">✖</div>
+            <div class="message">
+                Password must be longer than 8 chars!
+            </div>
+        </div>
+
         <div id = "HOMEPAGE" class="wallet-container screen hidden">        
             <div class="header-section">
                 <div class="button primary-button">TÊN VÍ</div>
@@ -90,7 +111,6 @@
         </div>
     </div>
     
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.15.0/ethers.umd.min.js"></script>
-    <script src="popup.js"></script>
+    <script src="../build/popup.js"></script>
 </body>
 </html>
