@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/tanminh51nbn/crypto-wallet-extension_DeDUT-Wallet#readme",
   "dependencies": {
+    "aes-js": "^3.1.2",
     "argon2": "^0.44.0",
     "argon2-browser": "^1.18.0",
     "ethers": "^6.11.1"

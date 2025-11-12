@@ -9,6 +9,9 @@
       "128": "icons/icon128.png"
     }
   },
+  "background": {
+    "service_worker": "build/service-worker.js" 
+  },
   "icons": {
     "128": "icons/icon128.png"
   },

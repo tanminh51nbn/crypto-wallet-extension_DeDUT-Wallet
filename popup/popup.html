@@ -44,9 +44,14 @@
 
             <div id="ImportSeedPhraseDisplay" class="seed-phrase-grid"></div>
 
-            <button id="resetMnemonicBtn" class="action-button reset-button">
-                RESET
-            </button>
+            <div class="reset-import">
+                <button id="resetMnemonicBtn" class="action-button reset-button">
+                    RESET
+                </button>
+                <button id="completeImportBtn" class="action-button import-button">
+                    IMPORT
+                </button>
+            </div>
 
             <button class="back-button" data-target="welcomeScreen">← Back</button>
         </div>
@@ -79,6 +84,13 @@
             <div class="icon-error">✖</div>
             <div class="message">
                 Invalid seed phrase! <br> Please reset & try again.
+            </div>
+        </div>
+
+        <div id="Less-than-12-words" class="notification-toast error hidden">
+            <div class="icon-error">✖</div>
+            <div class="message">
+                You have not entered all 12 words!
             </div>
         </div>
 

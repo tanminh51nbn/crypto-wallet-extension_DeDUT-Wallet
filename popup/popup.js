@@ -1,5 +1,3 @@
-import { createNewWallet, ReadMnemonic } from '../walletService.js';
-
 const $ = selector => document.querySelector(selector);
 const $$ = selector => document.querySelectorAll(selector);
 
@@ -17,6 +15,7 @@ const DOM = {
     },
     importMnemonic: {
         resetMnemonicBtn: $('#resetMnemonicBtn'),
+        completeImportBtn: $('#completeImportBtn'),
     },
     createMnemonic: {
         copySeedBtn: $('#copySeedBtn'),
@@ -27,6 +26,9 @@ const DOM = {
         ImportSeedPhraseDisplay: $('#ImportSeedPhraseDisplay'),
     }
 };
+async function sendMessage(action, payload = {}) {
+    return chrome.runtime.sendMessage({ action, payload });
+}
 
 class Show {
     constructor() {
@@ -139,24 +141,19 @@ class MnemonicController {
             this.show.Screen('HOMEPAGE'); 
         });
         this.dom.importMnemonic.resetMnemonicBtn?.addEventListener('click', () => this.resetMnemonicInputs());
+        this.dom.importMnemonic.completeImportBtn?.addEventListener('click', () => this.ImportMnemonicComplete());
     }
     
     // --- Created Logic ---
     async handleCreateWalletSetup(password) {
-        //cần chỉnh sửa lại
-        const SeedPhrases = await createNewWallet(password); 
-        this._TempMnemonic = SeedPhrases;
-        const displayElement = this.dom.MnemonicGridDisplay.CreateSeedPhraseDisplay;
-        this.renderSeedPhrase(SeedPhrases, displayElement, 'display');
-    }
-
-    copySeedPhrase() {
-        const seed = this._TempMnemonic.join(' ');
-        if (seed) {
-            navigator.clipboard.writeText(seed).then(() => {
-                this.show.Notify('copySuccessNotification', 1500);
-                this._TempMnemonic=null;
-            })
+        const response = await sendMessage('createWallet', { password });
+        
+        if (response.status === 'success') {
+            this._TempMnemonic = response.mnemonic;
+            const displayElement = this.dom.MnemonicGridDisplay.CreateSeedPhraseDisplay;
+            this.renderSeedPhrase(response.mnemonic, displayElement, 'display');
+        } else {
+            console.error(response.message);
         }
     }
 
@@ -175,27 +172,29 @@ class MnemonicController {
         }
     }
 
-    async PasteMnemonicComplete() {
+    async ImportMnemonicComplete() {
         const allInputs = document.querySelectorAll('#ImportSeedPhraseDisplay .seed-word');
         const inputWords = Array.from(allInputs).map(input => input.value.trim());
         const filledCount = inputWords.filter(word => word !== '').length;
 
-        if (this.isProcessing || filledCount !== 12) {
-            return;
-        }
-        this.isProcessing = true;
         const seedPhrase = inputWords.join(' ');
         if (filledCount === 12) {
             try {
                 const password = this._tempPassword; 
                 this._tempPassword = null;
-                await ReadMnemonic(seedPhrase, password);
-                this.show.Screen('HOMEPAGE'); 
+
+                const response = await sendMessage('importWallet', { seedPhrase, password });
+
+                if (response.status === 'success') {
+                    this.show.Screen('HOMEPAGE'); 
+                } else {
+                    throw new Error(response.message);
+                } 
             } catch (error) {
                 this.show.Notify('incorrectMnemonicNotification', 1500);
-            }finally {
-                this.isProcessing = false; 
             }
+        } else {
+            this.show.Notify('Less-than-12-words', 1500);
         }
     }
 
@@ -222,10 +221,9 @@ class MnemonicController {
         if (startIndex + words.length < allInputs.length) {
             allInputs[startIndex + words.length].focus();
         }
-        
-        this.PasteMnemonicComplete();
     }
 
+    //đóng vai trò như tạo thẻ trong HTML
     renderSeedPhrase(seedPhrase, displayElement, action) {
         if (!displayElement) return;
 
@@ -256,7 +254,6 @@ class MnemonicController {
                 wordDisplay.classList.add('seed-word');
 
                 wordDisplay.addEventListener('paste', this.handleMnemonicPaste.bind(this));
-                wordDisplay.addEventListener('keyup', this.PasteMnemonicComplete.bind(this));
                 
                 seedItem.appendChild(wordDisplay);
             }
@@ -315,7 +312,14 @@ class AppController {
         });
     }
 
-    init() {
+    async init() {
+        const statusResponse = await sendMessage('checkWalletStatus');
+
+        if (statusResponse.status === 'success' && statusResponse.exists) {
+            this.show.Screen('HOMEPAGE');
+        } else {
+            this.show.Screen('welcomeScreen');
+        }
         this.setupMainListeners();
     }
 }

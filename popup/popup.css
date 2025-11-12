@@ -234,8 +234,8 @@ label[for="confirmPassword"] {
     color: #0000CC;
     font-size: 17px; 
     font-weight: bold;
-    padding: 5px 12px;
     width: 50%;
+    padding-top: 5px;
 }
 /*--------------------------------------------------------------------------*/
 .notification-toast {
@@ -286,6 +286,7 @@ label[for="confirmPassword"] {
     font-weight: bold;
     display: block;
     font-size: 15px;
+    
 }
 
 .notification-toast.error {
@@ -296,4 +297,18 @@ label[for="confirmPassword"] {
 }
 #ErrorCreatingPasswordNotification{
     background-color: #ff4646;
+}
+.reset-import{
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+    margin-top: 15px;
+    
+}
+.import-button{
+    background-color: #9aee13;
+    color: #0000CC;
+    font-weight: bold;
+    font-size: 18px;
+    padding-top: 5px;
 }
