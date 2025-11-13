@@ -156,8 +156,8 @@ class MnemonicController {
             console.error(response.message);
         }
     }
-    copySeedPhrase() {
-        const seed = this._TempMnemonic.join(' ');
+    async copySeedPhrase() {
+        const seed = await this._TempMnemonic.join(' ');
         if (seed) {
             navigator.clipboard.writeText(seed).then(() => {
                 this.show.Notify('copySuccessNotification', 1500);

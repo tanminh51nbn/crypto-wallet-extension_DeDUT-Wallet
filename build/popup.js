@@ -150,6 +150,14 @@ class MnemonicController {
       console.error(response.message);
     }
   }
+  async copySeedPhrase() {
+    const seed = await this._TempMnemonic.join(' ');
+    if (seed) {
+      navigator.clipboard.writeText(seed).then(() => {
+        this.show.Notify('copySuccessNotification', 1500);
+      });
+    }
+  }
 
   // --- Imported Logic ---
   handleImportWalletSetup(password) {

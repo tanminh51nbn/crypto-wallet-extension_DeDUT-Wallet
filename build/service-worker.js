@@ -8997,9 +8997,3 @@ async function ReadMnemonic(seedPhrase, password) {
 //         throw new Error("Mật khẩu không chính xác hoặc tệp ví bị lỗi.");
 //     }
 // }
-
-// export { 
-//     createNewWallet, 
-//     ReadMnemonic,
-//     // unlockWallet
-// };
