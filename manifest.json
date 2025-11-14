@@ -10,23 +10,13 @@
     }
   },
   "background": {
-    "service_worker": "build/service-worker.js" 
+    "service_worker": "build/service-worker.js"
   },
   "icons": {
     "128": "icons/icon128.png"
   },
-  "permissions": [
-    "storage" 
-  ],
+  "permissions": ["storage"],
   "content_security_policy": {
     "extension_pages": "script-src 'self'; object-src 'self'"
-  },
-  "web_accessible_resources": [
-  {
-    "resources": [
-      "build/argon2.wasm"
-    ],
-    "matches": ["<all_urls>"]
   }
-]
 }

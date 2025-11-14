@@ -1,83 +1,70 @@
+// rollup.config.js
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import { babel } from '@rollup/plugin-babel';
-import copy from 'rollup-plugin-copy';
-
 
 const outputDir = 'build';
-const onwarnFunction = function(warning, warn) {
-    if (warning.code === 'THIS_IS_UNDEFINED') {
-        if (warning.loc && warning.loc.file && warning.loc.file.includes('aes-js')) {
-            return; 
-        }
-    }
-    warn(warning);
-};
+
+// === PLUGINS CẦN THIẾT CHO EXTENSION ===
 const commonPlugins = [
-    resolve({
-      browser: true,
-      preferBuiltins: false,
-    }),
-    commonjs({
-      transformMixedEsModules: true,
-    }),
-    babel({ 
-      babelHelpers: 'bundled',
-      exclude: 'node_modules/**',
-      presets: [
-          ['@babel/preset-env', {
-              targets: 'defaults',
-              modules: false
-          }]
-      ]
-    }),
+  // 1. Resolve node_modules (ethers, @noble/hashes, v.v.)
+  resolve({
+    browser: true,
+    preferBuiltins: false,
+    mainFields: ['browser', 'module', 'main'],
+    extensions: ['.mjs', '.js', '.json'],
+    exportConditions: ['module', 'import', 'default'],
+  }),
+
+  // 2. Chuyển CJS → ESM (ethers, aes-js, v.v.)
+  commonjs({
+    include: [/node_modules/],
+    transformMixedEsModules: true,
+    requireReturnsDefault: 'auto',
+  }),
+
+  // 3. Babel: hỗ trợ syntax hiện đại, bundled helpers
+  babel({
+    babelHelpers: 'bundled',
+    exclude: 'node_modules/**',
+    extensions: ['.js', '.ts'], // nếu bạn dùng TypeScript
+  }),
 ];
+
+// === CONTEXT FIX CHO aes-js (nếu dùng ethers) ===
 const moduleContextConfig = {
-    'node_modules/aes-js/': 'window',
-    'node_modules/ethers/node_modules/aes-js/': 'window'
+  'node_modules/aes-js/': 'self',
+  'node_modules/ethers/node_modules/aes-js/': 'self',
 };
-const copyPluginConfig = copy({
-    targets: [
-      {
-        src: 'node_modules/argon2-browser/dist/argon2.wasm',
-        dest: outputDir,
-      },
-      // TƯƠNG LAI: Nếu thư viện X cần file data/wasm khác
-      // {
-      //   src: 'node_modules/X/dist/-filelib.xxx',
-      //   dest: outputDir,
-      // },
-      { src: 'public/*', dest: outputDir }
-    ]
-});
 
 export default [
-  // Cấu hình 1: popup/popup.js (Popup UI)
+  // ==================== POPUP (ESM) ====================
   {
     input: 'popup/popup.js',
     output: {
-      file: `${outputDir}/popup.js`, 
-      format: 'esm',          
-      sourcemap: false,        
+      dir: outputDir,
+      format: 'esm',
+      entryFileNames: 'popup.js',
+      sourcemap: false,
     },
-    plugins: [
-        ...commonPlugins,
-        //copyPluginConfig,
-    ],
+    context: 'window',
     moduleContext: moduleContextConfig,
-    onwarn: onwarnFunction,
+    plugins: commonPlugins,
   },
-  
-  // Cấu hình 2: service-worker.js (Background Script)
+
+  // ==================== SERVICE WORKER (IIFE) ====================
   {
     input: 'service-worker.js',
     output: {
-      file: `${outputDir}/service-worker.js`, 
-      format: 'esm', 
+      dir: outputDir,
+      format: 'iife',
+      name: 'ServiceWorkerGlobal',
+      entryFileNames: 'service-worker.js',
       sourcemap: false,
     },
+    context: 'self',
+    moduleContext: () => 'self',
     plugins: commonPlugins,
     moduleContext: moduleContextConfig,
-    onwarn: onwarnFunction,
-  }
+  },
 ];

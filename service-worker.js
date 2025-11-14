@@ -1,9 +1,6 @@
-// walletService.js
 import { ethers } from 'ethers';
-// import { encryptData, decryptData } from './cryptoUtils.js';
+import { encryptData, decryptData } from './cryptoUtils_sw.js';
 
-
-//Lấy ví đã lưu (nếu có) khi extension khởi động
 
 async function checkWalletStatus() {
     const result = await chrome.storage.local.get(['customEncryptedWallet']);
@@ -38,17 +35,18 @@ chrome.runtime.onMessage.addListener(
 async function storeEncryptedWallet(wallet, password) {
     try {
         const privateKeyHex = wallet.privateKey;
-        
-        // const encryptedData = await encryptData(privateKeyHex, password); 
-        
+        console.log("Create privateKeyHex Successfully", privateKeyHex);
+        const encryptedData = await encryptData(privateKeyHex, password); 
+        console.log("Encrypt Successfully");
         await chrome.storage.local.set({ 
             'customEncryptedWallet': {
-                // ...encryptedData,
-                pw: password, // Lưu mật khẩu thô tạm thời cho mục đích demo
-                pk: privateKeyHex, // Lưu Private Key thô tạm thời cho mục đích demo
+                ...encryptedData,
+                // pw: password, // Lưu mật khẩu thô tạm thời cho mục đích demo
+                // pk: privateKeyHex, // Lưu Private Key thô tạm thời cho mục đích demo
                 address: wallet.address // Lưu địa chỉ để hiển thị trên UI mà không cần giải mã
             } 
         });
+        console.log("Store Successfully");
     } catch (err) {
         throw new Error(`Import & Store Failed: ${err.message}`);
     }
@@ -57,9 +55,9 @@ async function storeEncryptedWallet(wallet, password) {
 async function createNewWallet(password) {
     try {
         const wallet = ethers.Wallet.createRandom();
-        
+        console.log("CreateRandom Successfully");
         await storeEncryptedWallet(wallet, password);
-        
+        console.log("Store & Encrypt Successfully");
         return wallet.mnemonic.phrase.split(' ');
     } catch (error) {
             throw new Error("Create & Store Failed.");
@@ -78,20 +76,20 @@ async function ReadMnemonic(seedPhrase, password) {
     }
 }
 
-// async function unlockWallet(password) {
-//     const result = await chrome.storage.local.get(['customEncryptedWallet']);
-//     const encryptedData = result.customEncryptedWallet;
+async function unlockWallet(password) {
+    const result = await chrome.storage.local.get(['customEncryptedWallet']);
+    const encryptedData = result.customEncryptedWallet;
 
-//     if (!encryptedData) {
-//         throw new Error("Không tìm thấy ví được lưu. Vui lòng tạo hoặc khôi phục ví.");
-//     }
+    if (!encryptedData) {
+        throw new Error("Không tìm thấy ví được lưu. Vui lòng tạo hoặc khôi phục ví.");
+    }
 
-//     try {
-//         const privateKeyHex = await decryptData(encryptedData, password); 
+    try {
+        const privateKeyHex = await decryptData(encryptedData, password); 
         
-//         const wallet = new Wallet(privateKeyHex);
-//         return wallet;
-//     } catch (err) {
-//         throw new Error("Mật khẩu không chính xác hoặc tệp ví bị lỗi.");
-//     }
-// }
+        const wallet = new ethers.Wallet(privateKeyHex);
+        return wallet;
+    } catch (err) {
+        throw new Error("Mật khẩu không chính xác hoặc tệp ví bị lỗi.");
+    }
+}

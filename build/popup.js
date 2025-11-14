@@ -129,12 +129,13 @@ class MnemonicController {
     this.setupListeners();
   }
   setupListeners() {
-    this.dom.createMnemonic.copySeedBtn?.addEventListener('click', () => this.copySeedPhrase());
-    this.dom.createMnemonic.seedPhraseSavedBtn?.addEventListener('click', () => {
+    var _this$dom$createMnemo, _this$dom$createMnemo2, _this$dom$importMnemo, _this$dom$importMnemo2;
+    (_this$dom$createMnemo = this.dom.createMnemonic.copySeedBtn) === null || _this$dom$createMnemo === void 0 || _this$dom$createMnemo.addEventListener('click', () => this.copySeedPhrase());
+    (_this$dom$createMnemo2 = this.dom.createMnemonic.seedPhraseSavedBtn) === null || _this$dom$createMnemo2 === void 0 || _this$dom$createMnemo2.addEventListener('click', () => {
       this.show.Screen('HOMEPAGE');
     });
-    this.dom.importMnemonic.resetMnemonicBtn?.addEventListener('click', () => this.resetMnemonicInputs());
-    this.dom.importMnemonic.completeImportBtn?.addEventListener('click', () => this.ImportMnemonicComplete());
+    (_this$dom$importMnemo = this.dom.importMnemonic.resetMnemonicBtn) === null || _this$dom$importMnemo === void 0 || _this$dom$importMnemo.addEventListener('click', () => this.resetMnemonicInputs());
+    (_this$dom$importMnemo2 = this.dom.importMnemonic.completeImportBtn) === null || _this$dom$importMnemo2 === void 0 || _this$dom$importMnemo2.addEventListener('click', () => this.ImportMnemonicComplete());
   }
 
   // --- Created Logic ---
@@ -269,11 +270,12 @@ class AppController {
     }
   }
   setupMainListeners() {
-    DOM.start.createWalletBtn?.addEventListener('click', () => {
+    var _DOM$start$createWall, _DOM$start$importWall;
+    (_DOM$start$createWall = DOM.start.createWalletBtn) === null || _DOM$start$createWall === void 0 || _DOM$start$createWall.addEventListener('click', () => {
       this.currentAction = 'create';
       this.show.Screen('createPasswordScreen');
     });
-    DOM.start.importWalletBtn?.addEventListener('click', () => {
+    (_DOM$start$importWall = DOM.start.importWalletBtn) === null || _DOM$start$importWall === void 0 || _DOM$start$importWall.addEventListener('click', () => {
       this.currentAction = 'import';
       this.show.Screen('createPasswordScreen');
     });
