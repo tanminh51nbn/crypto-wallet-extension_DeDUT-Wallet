@@ -4,7 +4,7 @@ import { argon2id } from '@noble/hashes/argon2.js';
 const ARGON2_CONFIG = {
     t: 4,           // time cost (iterations)
     m: 64 * 1024,   // memory cost in KiB → 64MB
-    p: 1,           // parallelism
+    p: 2,           // parallelism
     dkLen: 32       // output length: 32 bytes
 };
 
@@ -16,7 +16,7 @@ async function deriveArgon2Key(password, salt) {
 
     // Dùng @noble/hashes/argon2id (thuần JS, không WASM, không eval)
     const hash = argon2id(pass, saltBytes, ARGON2_CONFIG);
-    console.log("Argon2id key derivation successful");
+
     // Import hash → Web Crypto AES key
     const aesKey = await crypto.subtle.importKey(
         'raw',
@@ -26,7 +26,7 @@ async function deriveArgon2Key(password, salt) {
         ['encrypt', 'decrypt']
     );
 
-    // Zeroing sensitive data (tốt nhất có thể)
+    // Zeroing sensitive data (tốt nhất có thể rầu)
     pass.fill(0);
     if (Array.isArray(salt)) salt.fill(0);
 

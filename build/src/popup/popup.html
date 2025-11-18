@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Wallet</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+
+<body>
+    <div class="Wallet-Interface"> 
+        <div id="welcomeScreen" class="screen hidden">
+            <button id="createWalletBtn" class="action-button created-button">
+                CREATE <br> NEW WALLET
+            </button>
+            <p class="note">
+                Mandatory: Save the 12 Seed-Phrases
+            </p>
+
+            <button id="importWalletBtn" class="action-button imported-button">
+                <span class="des">Already have?</span><br>
+                Import wallet
+            </button>
+        </div>
+
+        <div id="createPasswordScreen" class="screen hidden form-screen">
+            <h2 class="title">Create Password</h2>
+            <div class="form-group">
+                <div class="form-control">
+                    <label for="newPassword">New Password:</label>
+                    <input type="password" id="newPassword" required>
+                </div>
+                <div class="form-control">
+                    <label for="confirmPassword">Confirm Password:</label>
+                    <input type="password" id="confirmPassword" required>
+                </div>
+            </div>
+            <button class="back-button" data-target="welcomeScreen">← Back</button>
+        </div>
+
+        <div id="unlockPasswordScreen" class="screen hidden form-screen">
+            <h2 class="title">ENTER your Password</h2>
+            <div class="form-group">
+                <div class="form-control">
+                    <input type="password" id="unlockPasswordInput" required>
+                </div>
+            </div>
+        </div>
+
+        <div id="importMnemonicScreen" class="screen hidden form-screen">
+            <h2 class="title">Import Wallet</h2>
+            <p class="description">Enter your 12-word recovery phrase:</p>
+
+            <div id="ImportSeedPhraseDisplay" class="seed-phrase-grid"></div>
+
+            <div class="reset-import">
+                <button id="resetMnemonicBtn" class="action-button reset-button">
+                    RESET
+                </button>
+                <button id="completeImportBtn" class="action-button import-button">
+                    IMPORT
+                </button>
+            </div>
+
+            <button class="back-button" data-target="welcomeScreen">← Back</button>
+        </div>
+        
+        <div id="showSeedCreatedScreen" class="screen hidden form-screen">
+            <h2 class="title">SAVE YOUR SEED PHRASE</h2>
+            <p class="warning-text">Write down these 12 words and keep them safe.<br><strong>NEVER</strong> share them.</p>
+            
+            <div id="CreateSeedPhraseDisplay" class="seed-phrase-grid"></div>
+
+            <div class="copy-save">
+                <button id="copySeedBtn" class="action-button copy-button">
+                    <span class="icon">📋</span> COPY TO CLIPBOARD
+                </button>
+        
+                <button id="seedPhraseSavedBtn" class="action-button saved-button">
+                    I HAVE SAVED IT SAFELY
+                </button>
+            </div>
+        </div>
+
+        <div id="copySuccessNotification" class="notification-toast hidden">
+            <div class="icon-success">✔</div>
+            <div class="message">
+                Copied!
+            </div>
+        </div>
+
+        <div id="incorrectMnemonicNotification" class="notification-toast error hidden">
+            <div class="icon-error">✖</div>
+            <div class="message">
+                Invalid seed phrase! <br> Please reset & try again.
+            </div>
+        </div>
+
+        <div id="incorrectPasswordNotification" class="notification-toast error hidden">
+            <div class="icon-error">✖</div>
+            <div class="message">
+                INCORRECT PASSWORD
+            </div>
+        </div>
+
+        <div id="Less-than-12-words" class="notification-toast error hidden">
+            <div class="icon-error">✖</div>
+            <div class="message">
+                You have not entered all 12 words!
+            </div>
+        </div>
+
+        <div id="ErrorCreatingPasswordNotification" class="notification-toast error hidden">
+            <div class="icon-error">✖</div>
+            <div class="message">
+                Password must be longer than 8 chars!
+            </div>
+        </div>
+
+        <div id="passwordRequiredNotification" class="notification-toast error hidden">
+            <div class="icon-error">✖</div>
+            <div class="message">
+                Please ENTER your PASSWORD
+            </div>
+        </div>
+
+        <div id="loadingOverlay" class="screen hidden overlay">
+            <div class="loading-content">
+                <div class="spinner" aria-hidden="true"></div> 
+                <p class="loading-message">For security reasons <br> Please wait a moment</p>
+            </div>
+        </div>
+
+        <div id = "HOMEPAGE" class="screen hidden">        
+            <div class="header-bar">
+                <button class="action-button setting-button" id="SettingsBtn">⚙️</button>
+                <button class="action-button locking-button" id="LockWalletManually">🔒</button>
+            </div>
+            <div class="address-display">
+                <div class="network-badge">
+                    <span class="network-name" id="NetworkName">Sepolia Testnet</span>
+                    <div class="network-dot online"></div>
+                </div>
+                <h3 class="wallet-address" id="WalletAddressDisplay">
+                    </h3>
+                <button class="action-button copy-button" id="CopyAddressBtn">
+                    📋 Copy
+                </button>
+            </div>
+            <div class="balance-card">
+                <p class="balance-label">Balance</p>
+                <div class="balance-value-container">
+                    <span class="balance-amount" id="WalletBalanceAmount">0.00</span>
+                    <span class="balance-unit">SEPOLIA ETH</span>
+                </div>
+                <p class="fiat-value" id="WalletFiatValue">~$0.00</p>
+            </div>
+
+            <div class="transaction-history">
+                <h4>Transaction History</h4>
+                <div id="TransactionList">
+                    <p class="no-tx-message">nothing</p>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="action-button send-button">
+                    SEND
+                    <span class="icon-send">↗️</span>
+                </button>
+                <button class="action-button receive-button">
+                    RECEIVE
+                    <span class="icon-receive">↙️</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <script type="module" src="./popup.js"></script>
+</body>
+</html>

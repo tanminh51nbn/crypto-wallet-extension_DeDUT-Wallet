@@ -9,7 +9,7 @@
 
 <body>
     <div class="Wallet-Interface"> 
-        <div id="welcomeScreen" class="screen active">
+        <div id="welcomeScreen" class="screen hidden">
             <button id="createWalletBtn" class="action-button created-button">
                 CREATE <br> NEW WALLET
             </button>
@@ -36,6 +36,15 @@
                 </div>
             </div>
             <button class="back-button" data-target="welcomeScreen">← Back</button>
+        </div>
+
+        <div id="unlockPasswordScreen" class="screen hidden form-screen">
+            <h2 class="title">ENTER your Password</h2>
+            <div class="form-group">
+                <div class="form-control">
+                    <input type="password" id="unlockPasswordInput" required>
+                </div>
+            </div>
         </div>
 
         <div id="importMnemonicScreen" class="screen hidden form-screen">
@@ -87,6 +96,13 @@
             </div>
         </div>
 
+        <div id="incorrectPasswordNotification" class="notification-toast error hidden">
+            <div class="icon-error">✖</div>
+            <div class="message">
+                INCORRECT PASSWORD
+            </div>
+        </div>
+
         <div id="Less-than-12-words" class="notification-toast error hidden">
             <div class="icon-error">✖</div>
             <div class="message">
@@ -101,27 +117,64 @@
             </div>
         </div>
 
-        <div id = "HOMEPAGE" class="wallet-container screen hidden">        
-            <div class="header-section">
-                <div class="button primary-button">TÊN VÍ</div>
-                <div class="button secondary-button">SEPOLIA</div>
+        <div id="passwordRequiredNotification" class="notification-toast error hidden">
+            <div class="icon-error">✖</div>
+            <div class="message">
+                Please ENTER your PASSWORD
+            </div>
+        </div>
+
+        <div id="loadingOverlay" class="screen hidden overlay">
+            <div class="loading-content">
+                <div class="spinner" aria-hidden="true"></div> 
+                <p class="loading-message">For security reasons <br> Please wait a moment</p>
+            </div>
+        </div>
+
+        <div id = "HOMEPAGE" class="screen hidden">        
+            <div class="header-bar">
+                <button class="action-button setting-button" id="SettingsBtn">⚙️</button>
+                <button class="action-button locking-button" id="LockWalletManually">🔒</button>
+            </div>
+            <div class="address-display">
+                <div class="network-badge">
+                    <span class="network-name" id="NetworkName">Sepolia Testnet</span>
+                    <div class="network-dot online"></div>
+                </div>
+                <h3 class="wallet-address" id="WalletAddressDisplay">
+                    </h3>
+                <button class="action-button copy-button" id="CopyAddressBtn">
+                    📋 Copy
+                </button>
+            </div>
+            <div class="balance-card">
+                <p class="balance-label">Balance</p>
+                <div class="balance-value-container">
+                    <span class="balance-amount" id="WalletBalanceAmount">0.00</span>
+                    <span class="balance-unit">SEPOLIA ETH</span>
+                </div>
+                <p class="fiat-value" id="WalletFiatValue">~$0.00</p>
             </div>
 
-            <div class="balance-section">
-                <div class="eth-label">ETH</div>
-                <div class="balance-display">0.005</div>
-            </div>
-
-            <div class="history-label">HISTORY</div>
-            <div class="history-content">
+            <div class="transaction-history">
+                <h4>Transaction History</h4>
+                <div id="TransactionList">
+                    <p class="no-tx-message">nothing</p>
+                </div>
             </div>
 
             <div class="action-buttons">
-                <button class="action-button send-button">SEND</button>
-                <button class="action-button receive-button">RECEIVE</button>
+                <button class="action-button send-button">
+                    SEND
+                    <span class="icon-send">↗️</span>
+                </button>
+                <button class="action-button receive-button">
+                    RECEIVE
+                    <span class="icon-receive">↙️</span>
+                </button>
             </div>
         </div>
     </div>
-    <script type="module" src="../build/popup.js"></script>
+    <script type="module" src="./popup.js"></script>
 </body>
 </html>
