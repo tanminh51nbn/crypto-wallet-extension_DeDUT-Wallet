@@ -133,16 +133,18 @@
 
         <div id = "HOMEPAGE" class="screen hidden">        
             <div class="header-bar">
-                <button class="action-button setting-button" id="SettingsBtn">⚙️</button>
                 <button class="action-button locking-button" id="LockWalletManually">🔒</button>
+                <button class="action-button setting-button" id="SettingsBtn">⚙️</button>
             </div>
             <div class="address-display">
                 <div class="network-badge">
                     <span class="network-name" id="NetworkName">Sepolia Testnet</span>
-                    <div class="network-dot online"></div>
                 </div>
-                <h3 class="wallet-address" id="WalletAddressDisplay">
-                    </h3>
+                <div class="wallet-address">
+                    Wallet address: 
+                    <span id="WalletAddressDisplay">
+                    </span>
+                </div>
                 <button class="action-button copy-button" id="CopyAddressBtn">
                     📋 Copy
                 </button>
@@ -163,14 +165,12 @@
                 </div>
             </div>
 
-            <div class="action-buttons">
+            <div class="send-receive-buttons">
                 <button class="action-button send-button">
                     SEND
-                    <span class="icon-send">↗️</span>
                 </button>
                 <button class="action-button receive-button">
                     RECEIVE
-                    <span class="icon-receive">↙️</span>
                 </button>
             </div>
         </div>
