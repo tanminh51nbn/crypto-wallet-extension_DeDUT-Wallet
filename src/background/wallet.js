@@ -60,3 +60,37 @@ export async function unlockWallet(password) {
         throw new Error("Mật khẩu không chính xác hoặc tệp ví bị lỗi.");
     }
 }
+
+/**
+ * Ký và gửi giao dịch ETH
+ * @param {ethers.Wallet} wallet - Đối tượng ví đã được mở khóa
+ * @param {ethers.JsonRpcProvider} provider - Đối tượng Provider đã kết nối với mạng (Sepolia)
+ * @param {string} recipient - Địa chỉ nhận
+ * @param {number|string} amountInEther - Số lượng ETH muốn gửi (dưới dạng đơn vị Ether)
+ * @returns {Promise<ethers.TransactionResponse>} Đối tượng phản hồi giao dịch (chứa txHash)
+ */
+export async function sendEthTransaction(wallet, provider, recipient, amountInEther) {
+    if (!wallet || !provider) {
+        throw new Error("Ví hoặc Provider chưa được khởi tạo.");
+    }
+
+    try {
+        // 1. Chuyển đổi số lượng ETH sang Wei (BigInt)
+        const value = ethers.parseEther(amountInEther.toString());
+
+        // 2. Tạo đối tượng giao dịch gồm địa chỉ người nhận và số tiền gửi
+        const tx = {
+            to: recipient,
+            value: value,
+            // ethers sẽ tự động điền phí gas, nonce,...
+        };
+
+        // 3. Kết nối ví với RPC
+        const walletWithProvider = wallet.connect(provider);
+        const txResponse = await walletWithProvider.sendTransaction(tx);
+        return txResponse;
+        
+    } catch (error) {
+        throw new Error(`Transaction Failed: ${error.message}`);
+    }
+}

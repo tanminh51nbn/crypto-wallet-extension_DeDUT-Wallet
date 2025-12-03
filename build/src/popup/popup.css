@@ -71,6 +71,11 @@ body {
     justify-content: center;
     align-items: flex-end;
 }
+input::placeholder {
+    font-size: 12px;
+    color: #918f8f;
+    font-style: italic;
+}
 /*--------------------------------------------------------------------------*/
 
 #welcomeScreen{
@@ -118,7 +123,6 @@ body {
     width: 100%;
     align-items: center;
     justify-items: center;
-    align-content: flex-end;
 }
 .form-control{
     width: 80%;
@@ -126,14 +130,19 @@ body {
     font-size: 1.5em;
     border: 2px solid #FFFF00;
     border-radius: 10px;
-
 }
-#confirmPassword, #newPassword{
+#confirmPassword, #newPassword, #SendAddress, #SendAmount{
     width: 100%;
     box-sizing: border-box;
+    border-radius: 12px;
+}
+#CreatePasswordForm{
+    align-content: center;
 }
 label[for="newPassword"],
-label[for="confirmPassword"] {
+label[for="confirmPassword"],
+label[for="SendAddress"],
+label[for="SendAmount"] {
     font-size: 1.2em;
     font-weight: bold;
     color: #FFFF00;
@@ -145,6 +154,7 @@ label[for="confirmPassword"] {
     display:flex;
     width:97.5%;
     font-size: 20px;
+    border-radius: 12px;
 }
 /*--------------------------------------------------------------------------*/
 #importMnemonicScreen{
@@ -441,8 +451,11 @@ label[for="confirmPassword"] {
 /* ======================================================= */
 /* PHẦN 2: Tên Mạng và Địa Chỉ Ví (address-display) */
 /* ======================================================= */
-.address-display {
-    justify-items: center;
+/* Tên Mạng */
+#HOME-network{
+    display:flex;
+    justify-content: center;
+    width:100%;
 }
 .network-name{
     background-color: #FFFF00;
@@ -452,23 +465,28 @@ label[for="confirmPassword"] {
     font-weight: bold;
     padding:10px;
 }
-#CopyAddressBtn{
-    opacity: 0.5;
+/* Địa chỉ ví */
+#HOME-Address{
     display:flex;
-    max-width: 55px;
-    font-size: 9px;
+    align-items: center;
     justify-content: center;
-    max-height: fit-content;
-    padding: 1px;
 }
-#CopyAddressBtn:hover{
+#HOME-CopyAddressBtn{
+    background-color: #FFFF00;
+    color:#0000CC;
+    opacity: 0.5;
+    max-width: 80px;
+    font-size: 10px;
+    padding: 5px 5px;
+    margin-left: 4px;
+}
+#HOME-CopyAddressBtn:hover{
     opacity:1;
 }
-.wallet-address{
-    font-size: 15px;
+#wallet-address{
+    font-size: 17px;
     color:#FFFF00;
-    margin-top: 30px;
-    margin-bottom: 1px;
+    align-content: center;
 }
 /* ======================================================= */
 /* PHẦN 3: Số Dư (balance-card) */
@@ -481,7 +499,7 @@ label[for="confirmPassword"] {
     border-radius: 12px;
     text-align: center;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    flex-shrink: 0; /* KHÔNG CO LẠI */
+    flex-shrink: 0;
 }
 
 .balance-label {
@@ -577,4 +595,67 @@ label[for="confirmPassword"] {
 .send-receive-buttons{
     display:inline-flex;
     justify-content: space-around;
+}
+
+/*--------------------------------------------------------------------------*/
+#SENDPAGE{
+    flex-direction: column;
+}
+#SendAddress, #SendAmount{
+    font-size: 20px;
+    height: 40px;
+    background-color:rgb(247, 250, 96);
+    border-radius: 12px;
+    color:#0303ad;
+}
+#BalanceInSend{
+    font-size: 14px;
+    color:#FFFF00;
+}
+#ConfirmSend{
+    margin-left:100px;
+    margin-right: 100px;
+    padding: 3px;
+    color:#0000CC;
+    background-color: #FFFF00;
+    font-weight: bold;
+    font-size: 21px;
+}
+/*--------------------------------------------------------------------------*/
+#RECEIVEPAGE{
+    flex-direction: column;
+}
+#qrCodeContainer{
+    text-align: center;
+}
+#qrCanvas{
+    width: 300px;
+    height: 300px;
+    border: 3px solid #FFFF00;
+    border-radius: 10px;
+}
+#RECEIVE-CopyAddress{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+    margin-right: 10px;
+    margin-left:10px;
+}
+#walletAddressInput{
+    flex-grow: 1;
+    margin-right: 2px;
+    padding: 8px;
+    border: 1px solid #FFFF00;
+    border-radius: 12px;
+    background-color: #000b70;
+    color:#FFFF00;
+    font-size: 12px;
+}
+#RECEIVE-CopyAddressBtn{
+    padding: 5px 5px;
+    background-color: #FFFF00;
+    color: #0000CC;
+    max-width: 60px;
+    font-size: 10px;
 }

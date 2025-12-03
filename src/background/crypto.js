@@ -3,8 +3,8 @@ import { argon2id } from '@noble/hashes/argon2.js';
 // === CẤU HÌNH ARGON2 (có thể tùy chỉnh) ===
 const ARGON2_CONFIG = {
     t: 4,           // time cost (iterations)
-    m: 64 * 1024,   // memory cost in KiB → 64MB
-    p: 2,           // parallelism
+    m: 128 * 1024,   // memory cost in KiB → 64MB
+    p: 8,           // parallelism
     dkLen: 32       // output length: 32 bytes
 };
 

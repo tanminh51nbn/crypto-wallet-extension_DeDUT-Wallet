@@ -22,7 +22,7 @@ class AppController {
             this.handleUnlock.bind(this)
         );
         this.homepageController = new HomePageController(
-            DOM.home,
+            DOM,
             this.show
         );
         chrome.runtime.onMessage.addListener((request) => {

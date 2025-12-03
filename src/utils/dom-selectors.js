@@ -30,14 +30,14 @@ export const DOM = {
         ImportSeedPhraseDisplay: $('#ImportSeedPhraseDisplay'),
     },
     home: {
-        HOMEPAGE: document.getElementById('HOMEPAGE'),
-        NetworkName: document.getElementById('NetworkName'),
-        WalletAddressDisplay: document.getElementById('WalletAddressDisplay'),
-        CopyAddressBtn: document.getElementById('CopyAddressBtn'),
-        WalletBalanceAmount: document.getElementById('WalletBalanceAmount'),
-        SendTxBtn: document.getElementById('SendTxBtn'),
-        ReceiveTxBtn: document.getElementById('ReceiveTxBtn'),
-        LockWalletManually: document.getElementById('LockWalletManually'),
+        HOMEPAGE: $('#HOMEPAGE'),
+        NetworkName: $('#NetworkName'),
+        WalletAddressDisplay: $('#WalletAddressDisplay'),
+        CopyAddressBtn: $$('.copyAddress-button'),
+        WalletBalanceAmount: $('#WalletBalanceAmount'),
+        SendTxBtn: $('#SendTxBtn'),
+        ReceiveTxBtn: $('#ReceiveTxBtn'),
+        LockWalletManually: $('#LockWalletManually'),
         // ...
     },
 };

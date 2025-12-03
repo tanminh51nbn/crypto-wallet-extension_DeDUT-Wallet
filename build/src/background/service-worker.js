@@ -12571,8 +12571,8 @@ function yf(t, e, n, r) {
 
 const wf = {
     t: 4,
-    m: 65536,
-    p: 2,
+    m: 131072,
+    p: 8,
     dkLen: 32
 };
 
@@ -12718,14 +12718,37 @@ chrome.runtime.onMessage.addListener((t, e, n) => {
         const {address: t} = s;
         Nf.getBalance(t).then(t => {
             const e = Bt(t);
+            let r;
+            const s = e.indexOf(".");
+            if (-1 === s) r = e; else {
+                const t = s + 8;
+                r = e.substring(0, t).replace(/\.?0+$/, ""), r.endsWith(".") && (r = r.substring(0, r.length - 1));
+            }
             n({
                 status: "success",
-                balance: e
+                balance: r
             });
         }).catch(t => n({
             status: "error",
             message: t.message
         }));
+    } else if ("sendEthTransaction" === r) {
+        if (!If) return n({
+            status: "error",
+            message: "Wallet is locked"
+        }), i = !1, i;
+        const {recipient: t, amountInEther: e} = s;
+        sendEthTransaction(If, Nf, t, e).then(t => {
+            Cf(), n({
+                status: "success",
+                txHash: t.hash
+            });
+        }).catch(t => {
+            n({
+                status: "error",
+                message: t.message
+            });
+        });
     } else "lockWalletManually" === r ? (Rf(), n({
         status: "success"
     }), i = !1) : i = !1;

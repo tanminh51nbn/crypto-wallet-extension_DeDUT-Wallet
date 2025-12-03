@@ -52,11 +52,40 @@ chrome.runtime.onMessage.addListener(
             
             provider.getBalance(address)
                 .then(balance => {
-                    const balanceInEther = ethers.formatEther(balance);
-                    sendResponse({ status: 'success', balance: balanceInEther });
+                    const balanceInEther = ethers.formatEther(balance); 
+                    let formattedBalance;
+                    const decimalIndex = balanceInEther.indexOf('.');
+
+                    if (decimalIndex === -1) {
+                        formattedBalance = balanceInEther;
+                    } else {
+                        const limit = decimalIndex + 8;
+                        let slicedBalance = balanceInEther.substring(0, limit);
+                        formattedBalance = slicedBalance.replace(/\.?0+$/, '');
+
+                        if (formattedBalance.endsWith('.')) {
+                            formattedBalance = formattedBalance.substring(0, formattedBalance.length - 1);
+                        }
+                    }
+                    sendResponse({ status: 'success', balance: formattedBalance });
                 })
                 .catch(error => sendResponse({ status: 'error', message: error.message }));
-        
+        } else if (action === 'sendEthTransaction') {
+            if (!unlockedWallet) {
+                sendResponse({ status: 'error', message: 'Wallet is locked' });
+                isResponseAsync = false;
+                return isResponseAsync;
+            }
+            const { recipient, amountInEther } = payload;
+            
+            sendEthTransaction(unlockedWallet, provider, recipient, amountInEther)
+                .then(txResponse => {
+                    resetLockTimer(); 
+                    sendResponse({ status: 'success', txHash: txResponse.hash });
+                })
+                .catch(error => {
+                    sendResponse({ status: 'error', message: error.message });
+                });
         } else if (action === 'lockWalletManually') {
              lockWallet();
              sendResponse({ status: 'success' });
