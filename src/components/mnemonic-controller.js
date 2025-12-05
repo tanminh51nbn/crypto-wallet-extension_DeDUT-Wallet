@@ -34,7 +34,7 @@ export class MnemonicController {
         const seed = await this._TempMnemonic.join(' ');
         if (seed) {
             navigator.clipboard.writeText(seed).then(() => {
-                this.show.Notify('copySuccessNotification', 1500);
+                this.show.MakeAlert('success', 'Copied!', 3000);
             })
         }
     }
@@ -75,10 +75,10 @@ export class MnemonicController {
                     throw new Error(response.message);
                 } 
             } catch (error) {
-                this.show.Notify('incorrectMnemonicNotification', 1500);
+                this.show.MakeAlert('error', 'Invalid seed phrase!', 3000);
             }
         } else {
-            this.show.Notify('Less-than-12-words', 1500);
+            this.show.MakeAlert('error', 'You have not entered all 12 words!', 3000);
         }
     }
 

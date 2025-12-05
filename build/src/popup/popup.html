@@ -82,46 +82,8 @@
             </div>
         </div>
 
-        <div id="copySuccessNotification" class="notification-toast hidden">
-            <div class="icon-success">✔</div>
-            <div class="message">
-                Copied!
-            </div>
-        </div>
-
-        <div id="incorrectMnemonicNotification" class="notification-toast error hidden">
-            <div class="icon-error">✖</div>
-            <div class="message">
-                Invalid seed phrase! <br> Please reset & try again.
-            </div>
-        </div>
-
-        <div id="incorrectPasswordNotification" class="notification-toast error hidden">
-            <div class="icon-error">✖</div>
-            <div class="message">
-                INCORRECT PASSWORD
-            </div>
-        </div>
-
-        <div id="Less-than-12-words" class="notification-toast error hidden">
-            <div class="icon-error">✖</div>
-            <div class="message">
-                You have not entered all 12 words!
-            </div>
-        </div>
-
-        <div id="ErrorCreatingPasswordNotification" class="notification-toast error hidden">
-            <div class="icon-error">✖</div>
-            <div class="message">
-                Password must be longer than 8 chars!
-            </div>
-        </div>
-
-        <div id="passwordRequiredNotification" class="notification-toast error hidden">
-            <div class="icon-error">✖</div>
-            <div class="message">
-                Please ENTER your PASSWORD
-            </div>
+        <div id="NotificationToast" class="notification-toast hidden">
+            <div id="toastMessage"></div>
         </div>
 
         <div id="loadingOverlay" class="screen hidden overlay">
@@ -187,11 +149,11 @@
                     <input id="SendAmount" spellcheck="false" placeholder="  Enter the amount you want to send" required>
                 </div>
             </div>
-            <!-- <div id="BalanceInSend" class="balance-value-container">
-                <span class="balance-title">Balance: </span>
-                <span class="balance-amount" id="WalletBalanceAmount">0.00</span>
-                <span class="balance-unit">ETH</span>
-            </div> -->
+            <div id="BalanceInSend">
+                <span style= "font-size:14px;">Balance: </span>
+                <span class="balance-amount" id="BalanceAmountInSend">0.00</span>
+                <span class="balance-unit" id="HOME-balance-unit">ETH</span>
+            </div>
             <button id="ConfirmSend" class="action-button ConfirmSend-button">
                     Confirm
             </button>

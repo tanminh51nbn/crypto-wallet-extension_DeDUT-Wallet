@@ -175,8 +175,6 @@ label[for="SendAmount"] {
 #resetMnemonicBtn, #completeImportBtn{
     width:80%;
 }
-
-
 /*--------------------------------------------------------------------------*/
 #showSeedCreatedScreen {
     width: 100%;
@@ -256,68 +254,50 @@ label[for="SendAmount"] {
     width: 50%;
     padding-top: 5px;
 }
-
 /*--------------------------------------------------------------------------*/
 .notification-toast {
     position: fixed;
-    bottom: 12px;
+    bottom: 14px;
     z-index: 1000;
     right: 10px;
-    min-width: 250px;
-    padding: 10px 15px;
-    border-radius: 10px;
+    min-width: min-content;
+    max-width: 355px;
+    padding: 7px 10px;
+    border-radius: 12px;
     
-    background-color: #333;
-    color: white;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 15px;
-
-    transition: opacity 0.2s ease-out, transform 0.2s ease-out;
 }
-.notification-toast.hidden {
+.notification-toast.success {
+    background-color: #00ff48;
+    border: 3px solid #028639;
+    color: #000000;
+}
+
+.notification-toast.error {
+    background-color: #f50000;
+    border: 3px solid #5f0808;
+    color: #ffffff;
+}
+.notification-toast.hidden{
     display: none;
     opacity: 0;
-    transform: translateX(100%); 
 }
 
 .notification-toast.active {
     display: flex; 
     opacity: 1;
-    transform: translateX(0);
 }
 
-.icon-success {
-    font-size: 20px;
-    color: white;
-    line-height: 1;
-}
-.icon-error {
-    font-size: 50px;
-    color: #6d0000;
-    line-height: 1;
-    margin-top: 5px;
-}
-
-.message {
+#toastMessage {
     font-weight: bold;
     display: block;
-    font-size: 15px;
-    
+    font-size: 20px;
 }
 
-.notification-toast.error {
-    background-color: #ff4646;
-}
-#copySuccessNotification {
-    background-color: #4CAF50;
-}
-#ErrorCreatingPasswordNotification{
-    background-color: #ff4646;
-}
 .reset-import{
     display: flex;
     justify-content: space-between;
@@ -458,6 +438,7 @@ label[for="SendAmount"] {
     width:100%;
 }
 .network-name{
+    border: 3px solid #78850a;
     background-color: #FFFF00;
     color: #0000CC;
     border-radius: 20px;
@@ -508,10 +489,6 @@ label[for="SendAmount"] {
     font-weight: bold;
     opacity: 0.8;
     margin-bottom: 10px;
-}
-
-.balance-value-container {
-    margin: 4px 0;
 }
 
 .balance-amount {
@@ -608,11 +585,21 @@ label[for="SendAmount"] {
     border-radius: 12px;
     color:#0303ad;
 }
+#SendForm{
+    max-height: fit-content;
+    gap:2px;
+}
 #BalanceInSend{
-    font-size: 14px;
     color:#FFFF00;
+    margin-left: 40px;
+    max-height: 50px;
+    margin-top: 7px;
+}
+#BalanceAmountInSend, #HOME-balance-unit{
+    font-size: 14px;
 }
 #ConfirmSend{
+    margin-top: 10px;
     margin-left:100px;
     margin-right: 100px;
     padding: 3px;
@@ -620,6 +607,12 @@ label[for="SendAmount"] {
     background-color: #FFFF00;
     font-weight: bold;
     font-size: 21px;
+}
+#hashLink{
+    color:#474040;
+    font-weight: 300;
+    font-style: italic;
+    font-size: 14px;
 }
 /*--------------------------------------------------------------------------*/
 #RECEIVEPAGE{

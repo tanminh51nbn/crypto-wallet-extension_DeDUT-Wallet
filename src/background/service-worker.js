@@ -1,4 +1,4 @@
-import { checkWalletStatus, createNewWallet, ReadMnemonic, unlockWallet } from './wallet.js';
+import { checkWalletStatus, createNewWallet, ReadMnemonic, unlockWallet, sendEthTransaction } from './wallet.js';
 import { ethers } from 'ethers';
 
 const SEPOLIA_RPC_URL = `https://eth-sepolia.g.alchemy.com/v2/0PT4zYKK66VEZQGe89uX78NLXIqQ-fX7`;
@@ -80,7 +80,7 @@ chrome.runtime.onMessage.addListener(
             
             sendEthTransaction(unlockedWallet, provider, recipient, amountInEther)
                 .then(txResponse => {
-                    resetLockTimer(); 
+                    resetLockTimer();
                     sendResponse({ status: 'success', txHash: txResponse.hash });
                 })
                 .catch(error => {
@@ -90,7 +90,7 @@ chrome.runtime.onMessage.addListener(
              lockWallet();
              sendResponse({ status: 'success' });
              isResponseAsync = false;
-        } else{
+        } else {
             isResponseAsync = false;
         }
         

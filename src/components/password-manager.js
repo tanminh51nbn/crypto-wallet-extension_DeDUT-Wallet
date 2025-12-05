@@ -36,7 +36,7 @@ export class PasswordManager {
         const password = this.unlockPassInput.value;
         
         if (!password) {
-            this.show.Notify('passwordRequiredNotification', 1500); 
+            this.show.MakeAlert('error', 'Please ENTER YOUR PASSWORD', 3000); 
             return;
         }
         
@@ -55,7 +55,7 @@ export class PasswordManager {
         } else {
             this.clearInputs();
             this.newPassInput.focus();
-            this.show.Notify('ErrorCreatingPasswordNotification', 1500);
+            this.show.MakeAlert('error', 'Password must be longer than 8 chars!', 3000);
         }
     }
     handleEnterSubmit(event, callback) {

@@ -2,19 +2,27 @@ export class Show {
     constructor() {
         this.majorScreens = document.querySelectorAll('.screen');
         this.toastTimeoutHandle = null;
-        this.allNotifications = document.querySelectorAll('.notification-toast');
         this.loadingOverlay = document.getElementById('loadingOverlay');
+
+        this.toastElement = document.getElementById('NotificationToast');
+        this.toastMessage = document.getElementById('toastMessage');
+        this.type = null;
+
+        this.dialogElement = document.getElementById('NotificationDialog');
+        this.dialogTitle = document.getElementById('dialog-title');
+        this.dialogMessage = document.getElementById('DialogMessage');
+        this.dialogCloseBtn = document.getElementById('dialogCloseBtn');
     }
     _Switch(IDscreen) {
         if (this.toastTimeoutHandle) {
              clearTimeout(this.toastTimeoutHandle);
              this.toastTimeoutHandle = null;
         }
-        if (this.allNotifications) {
-            this.allNotifications.forEach(notification => {
-                notification.classList.remove('active');
-                notification.classList.add('hidden');
-            });
+        
+        if (this.toastElement) {
+            this.toastElement.classList.remove('active');
+            this.toastElement.classList.add('hidden');
+            this.toastElement.classList.remove(this.type);
         }
         this.majorScreens.forEach(screen => {
             screen.classList.remove('active');
@@ -36,25 +44,28 @@ export class Show {
         if (isVisible) {
             this.loadingOverlay.classList.remove('hidden');
             this.loadingOverlay.classList.add('active');
-            // *LƯU Ý: Đảm bảo CSS của #loadingOverlay có z-index cao và pointer-events: auto để ngăn chặn click*
         } else {
             this.loadingOverlay.classList.remove('active');
             this.loadingOverlay.classList.add('hidden');
         }
     }
-    Notify(IDscreen, durationMs = 1500) {
-        const targetNotification = document.getElementById(IDscreen);
+    MakeAlert (type, message, durationMs) {
+        this.type = type;
         if (this.toastTimeoutHandle) {
             clearTimeout(this.toastTimeoutHandle);
+            this.toastTimeoutHandle = null;
         }
-        targetNotification.classList.remove('hidden');
-        targetNotification.classList.add('active');
+        this.toastMessage.innerHTML = message;
+        this.toastElement.classList.add(type);
+
+        this.toastElement.classList.remove('hidden');
+        this.toastElement.classList.add('active');
+
         this.toastTimeoutHandle = setTimeout(() => {
-            targetNotification.classList.remove('active');
-            setTimeout(() => {
-                targetNotification.classList.add('hidden');
-                this.toastTimeoutHandle = null; 
-            }, 500); 
+            this.toastElement.classList.remove('active');
+            this.toastElement.classList.add('hidden');
+            this.toastTimeoutHandle = null; 
+            this.toastElement.classList.remove(type);
         }, durationMs);
     }
 }

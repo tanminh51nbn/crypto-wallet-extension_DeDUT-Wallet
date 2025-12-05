@@ -25,6 +25,7 @@ export class HomePageController {
             button.addEventListener('click', () => this.copyAddress());
         });
         this.dom.home.SendTxBtn?.addEventListener('click', () => this.show.Screen('SENDPAGE'));
+        this.dom.send.ConfirmSendBtn?.addEventListener('click', () => this.ConfirmSend());
         this.dom.home.ReceiveTxBtn?.addEventListener('click', () => {
             if (this.currentWallet && this.currentWallet.address) {
                 this.show.Screen('RECEIVEPAGE');
@@ -54,6 +55,42 @@ export class HomePageController {
             });
         });
     }
+    async ConfirmSend(){
+        if (!this.currentWallet) return;
+        const recipient = this.dom.send.RecipientInput.value.trim();
+        const amountInEther = this.dom.send.AmountInput.value.trim();
+
+        if (!recipient || !amountInEther || isNaN(parseFloat(amountInEther)) || parseFloat(amountInEther) <= 0) {
+            this.show.MakeAlert('error', 'Please enter a valid recipient and amount.', 3000);
+            return;
+        }
+
+        try{
+            this.show.LoadingOverlay(true);
+            const response = await sendMessage('sendEthTransaction', { recipient, amountInEther });
+            if (response.status === 'success') {
+                const txHash = response.txHash;
+                const EXPLORER_URL_BASE = 'https://sepolia.etherscan.io/tx/'; 
+                const txLink = EXPLORER_URL_BASE + txHash;
+                this.show.MakeAlert('success', 'Check Hash on Etherscan: <br><a id = "hashLink"' + 'href="'+ txLink + '" target="_blank" rel="noopener noreferrer">Check on Etherscan</a>', 10000);
+                
+                // Xóa input sau khi gửi thành công
+                this.dom.send.RecipientInput.value = '';
+                this.dom.send.AmountInput.value = '';
+                
+                // Quay lại màn hình chính và cập nhật UI
+                this.updateUI();
+
+            } else {
+                // this.show.MakeAlert(`Giao dịch thất bại: ${response.message}`, 8000);
+                console.error("Transaction Error:", response.message);
+            }
+        }catch{
+            console.error("sendMessage failed:", error);
+        } finally {
+            this.show.LoadingOverlay(false); 
+        }
+    }
 
     async updateUI() {
         if (!this.currentWallet) return;
@@ -64,16 +101,21 @@ export class HomePageController {
         this.dom.home.WalletAddressDisplay.textContent = shortenedAddress;
         
         // 2. Lấy và hiển thị Số Dư
-        this.dom.home.WalletBalanceAmount.textContent = 'Loading...'; 
+        this.dom.home.WalletBalanceAmount.forEach(el => {
+            el.textContent = 'Loading...';
+        });
         
         try {
             const response = await sendMessage('getWalletBalance', { address: address });
             
             if (response.status === 'success') {
-                // Giả sử service-worker trả về balance đã được format
-                this.dom.home.WalletBalanceAmount.textContent = response.balance; 
+                this.dom.home.WalletBalanceAmount.forEach(el => {
+                    el.textContent = response.balance;
+                }); 
             } else {
-                this.dom.home.WalletBalanceAmount.textContent = 'Error';
+                this.dom.home.WalletBalanceAmount.forEach(el => {
+                    el.textContent = "ERROR...";
+                });
             }
         } catch (error) {
             console.error("Failed to fetch balance:", error);
@@ -86,7 +128,7 @@ export class HomePageController {
         
         try {
             await navigator.clipboard.writeText(this.currentWallet.address);
-            this.show.Notify('copySuccessNotification', 1500);
+            this.show.MakeAlert('success', 'Copied!', 3000);
         } catch (err) {
             console.error('Could not copy text: ', err);
         }
@@ -94,7 +136,6 @@ export class HomePageController {
 
     async lockWallet() {
         this.show.LoadingOverlay(true);
-        // Gửi lệnh khóa ví thủ công tới Service Worker
         await sendMessage('lockWalletManually');
         this.currentWallet = null;
         this.show.LoadingOverlay(false);

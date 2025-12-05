@@ -56,7 +56,7 @@ class AppController {
             this.homepageController.setWallet(this.unlockedWallet);
             this.show.Screen('HOMEPAGE'); 
         } else {
-            this.show.Notify('incorrectPasswordNotification', 1500);
+            this.show.MakeAlert('error', 'INCORRECT PASSWORD', 3000);
         }
     }
 

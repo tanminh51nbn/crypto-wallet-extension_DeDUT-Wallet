@@ -77,19 +77,16 @@ export async function sendEthTransaction(wallet, provider, recipient, amountInEt
     try {
         // 1. Chuyển đổi số lượng ETH sang Wei (BigInt)
         const value = ethers.parseEther(amountInEther.toString());
-
         // 2. Tạo đối tượng giao dịch gồm địa chỉ người nhận và số tiền gửi
         const tx = {
             to: recipient,
             value: value,
             // ethers sẽ tự động điền phí gas, nonce,...
         };
-
         // 3. Kết nối ví với RPC
         const walletWithProvider = wallet.connect(provider);
         const txResponse = await walletWithProvider.sendTransaction(tx);
         return txResponse;
-        
     } catch (error) {
         throw new Error(`Transaction Failed: ${error.message}`);
     }

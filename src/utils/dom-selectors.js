@@ -34,11 +34,15 @@ export const DOM = {
         NetworkName: $('#NetworkName'),
         WalletAddressDisplay: $('#WalletAddressDisplay'),
         CopyAddressBtn: $$('.copyAddress-button'),
-        WalletBalanceAmount: $('#WalletBalanceAmount'),
+        WalletBalanceAmount: $$('.balance-amount'),
         SendTxBtn: $('#SendTxBtn'),
         ReceiveTxBtn: $('#ReceiveTxBtn'),
         LockWalletManually: $('#LockWalletManually'),
-        // ...
+    },
+    send:{
+        RecipientInput: $('#SendAddress'),
+        AmountInput: $('#SendAmount'),
+        ConfirmSendBtn: $('#ConfirmSend'),
     },
 };
 
