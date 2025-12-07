@@ -34,7 +34,8 @@ const e = e => document.querySelector(e), t = e => document.querySelectorAll(e),
         WalletBalanceAmount: t(".balance-amount"),
         SendTxBtn: e("#SendTxBtn"),
         ReceiveTxBtn: e("#ReceiveTxBtn"),
-        LockWalletManually: e("#LockWalletManually")
+        LockWalletManually: e("#LockWalletManually"),
+        TransactionList: e("#TransactionList")
     },
     send: {
         RecipientInput: e("#SendAddress"),
@@ -141,7 +142,7 @@ class r {
             this._TempMnemonic = t.mnemonic;
             const e = this.dom.MnemonicGridDisplay.CreateSeedPhraseDisplay;
             this.renderSeedPhrase(t.mnemonic, e, "display");
-        }
+        } else console.error(t.message);
     }
     async copySeedPhrase() {
         const e = await this._TempMnemonic.join(" ");
@@ -292,7 +293,7 @@ l.exports = function() {
         LOG: [ 255, 0, 1, 25, 2, 50, 26, 198, 3, 223, 51, 238, 27, 104, 199, 75, 4, 100, 224, 14, 52, 141, 239, 129, 28, 193, 105, 248, 200, 8, 76, 113, 5, 138, 101, 47, 225, 36, 15, 33, 53, 147, 142, 218, 240, 18, 130, 69, 29, 181, 194, 125, 106, 39, 249, 185, 201, 154, 9, 120, 77, 228, 114, 166, 6, 191, 139, 98, 102, 221, 48, 253, 226, 152, 37, 179, 16, 145, 34, 136, 54, 208, 148, 206, 143, 150, 219, 189, 241, 210, 19, 92, 131, 56, 70, 64, 30, 66, 182, 163, 195, 72, 126, 110, 107, 58, 40, 84, 250, 133, 186, 61, 202, 94, 155, 159, 10, 21, 121, 43, 78, 212, 229, 172, 115, 243, 167, 87, 7, 112, 192, 247, 140, 128, 99, 13, 103, 74, 222, 237, 49, 197, 254, 24, 227, 165, 153, 119, 38, 184, 180, 124, 17, 68, 146, 217, 35, 32, 137, 46, 55, 63, 209, 91, 149, 188, 207, 205, 144, 135, 151, 178, 220, 252, 190, 97, 242, 86, 211, 171, 20, 42, 93, 158, 132, 60, 57, 83, 71, 109, 65, 162, 31, 45, 67, 216, 183, 123, 164, 118, 196, 23, 73, 236, 127, 12, 111, 246, 108, 161, 59, 82, 41, 157, 85, 170, 251, 96, 134, 177, 187, 204, 62, 90, 203, 89, 95, 176, 156, 169, 160, 81, 11, 245, 22, 235, 122, 117, 44, 215, 79, 174, 213, 233, 230, 231, 173, 232, 116, 214, 244, 234, 168, 80, 88, 175 ]
     }), v = l.extend(null, {
         BLOCK: [ 3220, 1468, 2713, 1235, 3062, 1890, 2119, 1549, 2344, 2936, 1117, 2583, 1330, 2470, 1667, 2249, 2028, 3780, 481, 4011, 142, 3098, 831, 3445, 592, 2517, 1776, 2234, 1951, 2827, 1070, 2660, 1345, 3177 ]
-    }), _ = l.extend(function(e) {
+    }), g = l.extend(function(e) {
         var t, s, n, i, a, r = e.value.length;
         for (this._badness = [], this._level = m.LEVELS[e.level], this._polynomial = [], 
         this._value = e.value, this._version = 0, this._stringBuffer = []; this._version < 40 && (this._version++, 
@@ -300,8 +301,8 @@ l.exports = function() {
         t = m.BLOCKS[n++], s = m.BLOCKS[n], !(r <= (n = t * (i + a) + a - 3 + (this._version <= 9)))); ) ;
         this._dataBlock = t, this._eccBlock = s, this._neccBlock1 = i, this._neccBlock2 = a;
         var o = this.width = 17 + 4 * this._version;
-        this.buffer = _._createArray(o * o), this._ecc = _._createArray(t + (t + s) * (i + a) + a), 
-        this._mask = _._createArray((o * (o + 1) + 1) / 2), this._insertFinders(), this._insertAlignments(), 
+        this.buffer = g._createArray(o * o), this._ecc = g._createArray(t + (t + s) * (i + a) + a), 
+        this._mask = g._createArray((o * (o + 1) + 1) / 2), this._insertFinders(), this._insertAlignments(), 
         this.buffer[8 + o * (o - 8)] = 1, this._insertTimingGap(), this._reverseMask(), 
         this._insertTimingRowAndColumn(), this._insertVersion(), this._syncMask(), this._convertBitStream(r), 
         this._calculatePolynomial(), this._appendEccToData(), this._interleaveBlocks(), 
@@ -318,8 +319,8 @@ l.exports = function() {
             var i, a, r, o = this._polynomial, l = this._stringBuffer;
             for (a = 0; a < n; a++) l[s + a] = 0;
             for (a = 0; a < t; a++) {
-                if (255 !== (i = p.LOG[l[e + a] ^ l[s]])) for (r = 1; r < n; r++) l[s + r - 1] = l[s + r] ^ p.EXPONENT[_._modN(i + o[n - r])]; else for (r = s; r < s + n; r++) l[r] = l[r + 1];
-                l[s + n - 1] = 255 === i ? 0 : p.EXPONENT[_._modN(i + o[0])];
+                if (255 !== (i = p.LOG[l[e + a] ^ l[s]])) for (r = 1; r < n; r++) l[s + r - 1] = l[s + r] ^ p.EXPONENT[g._modN(i + o[n - r])]; else for (r = s; r < s + n; r++) l[r] = l[r + 1];
+                l[s + n - 1] = 255 === i ? 0 : p.EXPONENT[g._modN(i + o[0])];
             }
         },
         _appendEccToData: function() {
@@ -367,6 +368,7 @@ l.exports = function() {
               case 7:
                 for (s = 0, i = 0; i < r; i++, s++) for (3 === s && (s = 0), t = 0, n = 0; n < r; n++, 
                 t++) 3 === t && (t = 0), (t && t === s) + (n + i & 1) & 1 || this._isMasked(n, i) || (a[n + i * r] ^= 1);
+                break;
             }
         },
         _calculateMaxLength: function() {
@@ -375,14 +377,14 @@ l.exports = function() {
         _calculatePolynomial: function() {
             var e, t, s = this._eccBlock, n = this._polynomial;
             for (n[0] = 1, e = 0; e < s; e++) {
-                for (n[e + 1] = 1, t = e; t > 0; t--) n[t] = n[t] ? n[t - 1] ^ p.EXPONENT[_._modN(p.LOG[n[t]] + e)] : n[t - 1];
-                n[0] = p.EXPONENT[_._modN(p.LOG[n[0]] + e)];
+                for (n[e + 1] = 1, t = e; t > 0; t--) n[t] = n[t] ? n[t - 1] ^ p.EXPONENT[g._modN(p.LOG[n[t]] + e)] : n[t - 1];
+                n[0] = p.EXPONENT[g._modN(p.LOG[n[0]] + e)];
             }
             for (e = 0; e <= s; e++) n[e] = p.LOG[n[e]];
         },
         _checkBadness: function() {
             var e, t, s, n, i, a = 0, r = this._badness, o = this.buffer, l = this.width;
-            for (i = 0; i < l - 1; i++) for (n = 0; n < l - 1; n++) (o[n + l * i] && o[n + 1 + l * i] && o[n + l * (i + 1)] && o[n + 1 + l * (i + 1)] || !(o[n + l * i] || o[n + 1 + l * i] || o[n + l * (i + 1)] || o[n + 1 + l * (i + 1)])) && (a += _.N2);
+            for (i = 0; i < l - 1; i++) for (n = 0; n < l - 1; n++) (o[n + l * i] && o[n + 1 + l * i] && o[n + l * (i + 1)] && o[n + 1 + l * (i + 1)] || !(o[n + l * i] || o[n + 1 + l * i] || o[n + l * (i + 1)] || o[n + 1 + l * (i + 1)])) && (a += g.N2);
             var c = 0;
             for (i = 0; i < l; i++) {
                 for (s = 0, r[0] = 0, e = 0, n = 0; n < l; n++) e === (t = o[n + l * i]) ? r[s]++ : r[++s] = 1, 
@@ -392,7 +394,7 @@ l.exports = function() {
             c < 0 && (c = -c);
             var h = 0, d = c;
             for (d += d << 2, d <<= 1; d > l * l; ) d -= l * l, h++;
-            for (a += h * _.N4, n = 0; n < l; n++) {
+            for (a += h * g.N4, n = 0; n < l; n++) {
                 for (s = 0, r[0] = 0, e = 0, i = 0; i < l; i++) e === (t = o[n + l * i]) ? r[s]++ : r[++s] = 1, 
                 e = t;
                 a += this._getBadness(s);
@@ -416,8 +418,8 @@ l.exports = function() {
         },
         _getBadness: function(e) {
             var t, s = 0, n = this._badness;
-            for (t = 0; t <= e; t++) n[t] >= 5 && (s += _.N1 + n[t] - 5);
-            for (t = 3; t < e - 1; t += 2) n[t - 2] === n[t + 2] && n[t + 2] === n[t - 1] && n[t - 1] === n[t + 1] && 3 * n[t - 1] === n[t] && (0 === n[t - 3] || t + 3 > e || 3 * n[t - 3] >= 4 * n[t] || 3 * n[t + 3] >= 4 * n[t]) && (s += _.N3);
+            for (t = 0; t <= e; t++) n[t] >= 5 && (s += g.N1 + n[t] - 5);
+            for (t = 3; t < e - 1; t += 2) n[t - 2] === n[t + 2] && n[t + 2] === n[t - 1] && n[t - 1] === n[t + 1] && 3 * n[t - 1] === n[t] && (0 === n[t - 3] || t + 3 > e || 3 * n[t - 3] >= 4 * n[t] || 3 * n[t + 3] >= 4 * n[t]) && (s += g.N3);
             return s;
         },
         _finish: function() {
@@ -478,7 +480,7 @@ l.exports = function() {
             i[2 - n + r - 11 + r * (5 - s)] = 1) : (this._setMask(5 - s, 2 - n + r - 11), this._setMask(2 - n + r - 11, 5 - s));
         },
         _isMasked: function(e, t) {
-            var s = _._getMaskBit(e, t);
+            var s = g._getMaskBit(e, t);
             return 1 === this._mask[s];
         },
         _pack: function() {
@@ -498,7 +500,7 @@ l.exports = function() {
             for (t = 0; t < 7; t++) this._setMask(8, t + s - 7);
         },
         _setMask: function(e, t) {
-            var s = _._getMaskBit(e, t);
+            var s = g._getMaskBit(e, t);
             this._mask[s] = 1;
         },
         _syncMask: function() {
@@ -523,7 +525,7 @@ l.exports = function() {
         N2: 3,
         N3: 40,
         N4: 10
-    }), w = _, g = h.extend({
+    }), _ = g, w = h.extend({
         draw: function() {
             this.element.src = this.qrious.toDataURL();
         },
@@ -622,10 +624,10 @@ l.exports = function() {
             if (this._services[e]) throw new Error("Service is already managed with name: " + e);
             t && (this._services[e] = t);
         }
-    }), L = new E([ new k("background", !0, "white"), new k("backgroundAlpha", !0, 1, y.abs), new k("element"), new k("foreground", !0, "black"), new k("foregroundAlpha", !0, 1, y.abs), new k("level", !0, "L", y.toUpperCase), new k("mime", !0, "image/png"), new k("padding", !0, null, y.abs), new k("size", !0, 100, y.abs), new k("value", !0, "") ]), B = new S, A = l.extend(function(e) {
+    }), L = new E([ new k("background", !0, "white"), new k("backgroundAlpha", !0, 1, y.abs), new k("element"), new k("foreground", !0, "black"), new k("foregroundAlpha", !0, 1, y.abs), new k("level", !0, "L", y.toUpperCase), new k("mime", !0, "image/png"), new k("padding", !0, null, y.abs), new k("size", !0, 100, y.abs), new k("value", !0, "") ]), B = new S, P = l.extend(function(e) {
         L.init(e, this, this.update.bind(this));
         var t = L.get("element", this), s = B.getService("element"), n = t && s.isCanvas(t) ? t : s.createCanvas(), i = t && s.isImage(t) ? t : s.createImage();
-        this._canvasRenderer = new u(this, n, !0), this._imageRenderer = new g(this, i, i === t), 
+        this._canvasRenderer = new u(this, n, !0), this._imageRenderer = new w(this, i, i === t), 
         this.update();
     }, {
         get: function() {
@@ -638,7 +640,7 @@ l.exports = function() {
             return this.canvas.toDataURL(e || this.mime);
         },
         update: function() {
-            var e = new w({
+            var e = new _({
                 level: this.level,
                 value: this.value
             });
@@ -649,7 +651,7 @@ l.exports = function() {
             B.setService(e.getName(), e);
         }
     });
-    Object.defineProperties(A.prototype, {
+    Object.defineProperties(P.prototype, {
         canvas: {
             get: function() {
                 return this._canvasRenderer.getElement();
@@ -661,7 +663,7 @@ l.exports = function() {
             }
         }
     });
-    var b = A, P = b, I = l.extend({
+    var b = P, A = b, I = l.extend({
         getName: function() {}
     }).extend({
         createCanvas: function() {},
@@ -685,17 +687,18 @@ l.exports = function() {
             return e instanceof HTMLImageElement;
         }
     });
-    return P.use(new I), P;
+    return A.use(new I), A;
 }();
 
 var c = o(l.exports);
 
 class h {
     constructor(e, t) {
-        this.dom = e, this.show = t, this.currentWallet = null, this.setupListeners();
+        this.dom = e, this.show = t, this.currentWallet = null, this.txPollingInterval = null, 
+        this.setupListeners();
     }
     setWallet(e) {
-        this.currentWallet = e, this.updateUI();
+        this.currentWallet = e, this.updateUI(), this.startTxPolling(1e4);
     }
     setupListeners() {
         var e, t, s, n;
@@ -734,8 +737,10 @@ class h {
                 const e = s.txHash, t = "https://sepolia.etherscan.io/tx/" + e;
                 this.show.MakeAlert("success", 'Check Hash on Etherscan: <br><a id = "hashLink"href="' + t + '" target="_blank" rel="noopener noreferrer">Check on Etherscan</a>', 1e4), 
                 this.dom.send.RecipientInput.value = "", this.dom.send.AmountInput.value = "", this.updateUI();
-            }
-        } catch {} finally {
+            } else console.error("Transaction Error:", s.message);
+        } catch {
+            console.error("sendMessage failed:", error);
+        } finally {
             this.show.LoadingOverlay(!1);
         }
     }
@@ -755,17 +760,53 @@ class h {
                 e.textContent = "ERROR...";
             });
         } catch (e) {
-            this.dom.home.WalletBalanceAmount.textContent = "Error";
+            console.error("Failed to fetch balance:", e), this.dom.home.WalletBalanceAmount.textContent = "Error";
         }
     }
     async copyAddress() {
         if (this.currentWallet) try {
             await navigator.clipboard.writeText(this.currentWallet.address), this.show.MakeAlert("success", "Copied!", 3e3);
-        } catch (e) {}
+        } catch (e) {
+            console.error("Could not copy text: ", e);
+        }
     }
     async lockWallet() {
         this.show.LoadingOverlay(!0), await n("lockWalletManually"), this.currentWallet = null, 
-        this.show.LoadingOverlay(!1), this.show.Screen("unlockPasswordScreen");
+        this.stopTxPolling(), this.show.LoadingOverlay(!1), this.show.Screen("unlockPasswordScreen");
+    }
+    async loadTransactionHistory() {
+        if (!this.currentWallet || !this.currentWallet.address) return;
+        const e = this.dom.home.TransactionList;
+        if (!e) return;
+        console.log("TransactionList DOM:", this.dom.home.TransactionList);
+        const t = await n("getTxHistory", {
+            address: this.currentWallet.address
+        }), s = (null == t ? void 0 : t.history) || [];
+        e.innerHTML = "", 0 !== s.length ? (console.log("Start list.ForEach()"), s.forEach(t => {
+            const s = t.hash.slice(0, 10) + "..." + t.hash.slice(-10), n = new Date(t.timeStamp).toLocaleString(), i = `https://sepolia.etherscan.io/tx/${t.hash}`, a = document.createElement("div");
+            a.className = "tx-item", a.innerHTML = `\n                <div class="tx-row">\n                    <div class="tx-left">\n                        <a class="tx-hash" href="${i}" target="_blank">${s}</a>\n                        <div class="tx-time">${n}</div>\n                    </div>\n\n                    <div class="tx-right">\n                        <div class="tx-type-line">\n                            <span class="tx-type ${t.type.toLowerCase()}">\n                                ${t.type}\n                            </span>\n                            <span class="tx-amount">${function(e) {
+                if (!e) return e;
+                const t = Number(e);
+                if (t >= .001) {
+                    const [t, s = ""] = e.split(".");
+                    return s.length > 4 ? `${t}.${s.slice(0, 4)}...` : e;
+                }
+                const s = t.toExponential(), [n, i] = s.split("e-"), a = parseInt(i, 10), r = n.replace(".", "");
+                if (a <= 3) return `0.${"0".repeat(a)}${r}`;
+                const o = n.length > 5 ? r.slice(0, 3) + "..." : r;
+                return `0.0<sub>${a}</sub>${o}`;
+            }(t.value)} ETH</span>\n                        </div>\n\n                        <span class="tx-status ${t.status}">${t.status}</span>\n                    </div>\n                </div>\n            `, 
+            e.appendChild(a);
+        }), console.log("loadTransactionHistory completed.")) : e.innerHTML = '<p class="no-tx-message">No transactions</p>';
+    }
+    startTxPolling(e = 1e4) {
+        this.txPollingInterval && clearInterval(this.txPollingInterval), console.log("Start loading transaction history"), 
+        this.loadTransactionHistory(), console.log("END loading transaction history"), this.txPollingInterval = setInterval(() => {
+            this.loadTransactionHistory();
+        }, e);
+    }
+    stopTxPolling() {
+        this.txPollingInterval && (clearInterval(this.txPollingInterval), this.txPollingInterval = null);
     }
 }
 

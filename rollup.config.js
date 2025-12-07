@@ -8,9 +8,9 @@ import terser from '@rollup/plugin-terser';
 const outputDir = 'build';
 const TerserOptions = terser({
     compress: {
-        drop_console: true, 
-        drop_debugger: true, 
-        dead_code: true,
+        drop_console: false, 
+        drop_debugger: false, 
+        dead_code: false,
     },
     
     output: {

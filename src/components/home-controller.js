@@ -9,14 +9,15 @@ export class HomePageController {
         this.dom = domElements;
         this.show = showInstance;
         this.currentWallet = null; 
-        
+        this.txPollingInterval = null;
         this.setupListeners();
     }
 
     setWallet(walletInfo) {
         // Nhận thông tin ví đã mở khóa từ AppController
         this.currentWallet = walletInfo;
-        this.updateUI(); 
+        this.updateUI();
+        this.startTxPolling(10000);
     }
 
     setupListeners() {
@@ -138,7 +139,114 @@ export class HomePageController {
         this.show.LoadingOverlay(true);
         await sendMessage('lockWalletManually');
         this.currentWallet = null;
+        this.stopTxPolling();
         this.show.LoadingOverlay(false);
-        this.show.Screen('unlockPasswordScreen'); 
+        this.show.Screen('unlockPasswordScreen');
     }
+
+    async loadTransactionHistory() {
+        if (!this.currentWallet || !this.currentWallet.address) return;
+
+        const container = this.dom.home.TransactionList;
+        if (!container) return;
+        console.log("TransactionList DOM:", this.dom.home.TransactionList);
+
+        const response = await sendMessage("getTxHistory", {
+            address: this.currentWallet.address
+        });
+
+        const list = response?.history || [];
+        container.innerHTML = "";
+
+        if (list.length === 0) {
+            container.innerHTML = `<p class="no-tx-message">No transactions</p>`;
+            return;
+        }
+        
+        console.log("Start list.ForEach()");
+        list.forEach(tx => {
+            const shortHash = tx.hash.slice(0, 10) + "..." + tx.hash.slice(-10);
+            const time = new Date(tx.timeStamp).toLocaleString();
+            const scanUrl = `https://sepolia.etherscan.io/tx/${tx.hash}`;
+
+            const item = document.createElement("div");
+            item.className = "tx-item";
+
+            item.innerHTML = `
+                <div class="tx-row">
+                    <div class="tx-left">
+                        <a class="tx-hash" href="${scanUrl}" target="_blank">${shortHash}</a>
+                        <div class="tx-time">${time}</div>
+                    </div>
+
+                    <div class="tx-right">
+                        <div class="tx-type-line">
+                            <span class="tx-type ${tx.type.toLowerCase()}">
+                                ${tx.type}
+                            </span>
+                            <span class="tx-amount">${formatSmallEthSubscript(tx.value)} ETH</span>
+                        </div>
+
+                        <span class="tx-status ${tx.status}">${tx.status}</span>
+                    </div>
+                </div>
+            `;
+
+            container.appendChild(item);
+        });
+        console.log("loadTransactionHistory completed.");
+    }
+    startTxPolling(intervalMs = 10000) {
+        if (this.txPollingInterval) {
+            clearInterval(this.txPollingInterval);
+        }
+        console.log("Start loading transaction history");
+        this.loadTransactionHistory();
+        console.log("END loading transaction history");
+        this.txPollingInterval = setInterval(() => {
+            this.loadTransactionHistory();
+        }, intervalMs);
+    }
+
+    stopTxPolling() {
+        if (this.txPollingInterval) {
+            clearInterval(this.txPollingInterval);
+            this.txPollingInterval = null;
+        }
+    }
+}
+function formatSmallEthSubscript(valueEth) {
+    if (!valueEth) return valueEth;
+
+    const num = Number(valueEth);
+
+    // 1) Không phải số nhỏ -> hiển thị 4 chữ thập phân + ...
+    if (num >= 0.001) {
+        const [intPart, decPart = ""] = valueEth.split(".");
+        if (decPart.length > 4)
+            return `${intPart}.${decPart.slice(0, 4)}...`;
+
+        return valueEth;
+    }
+
+    // 2) Số rất nhỏ -> BẮT BUỘC ép về exponential
+    const expStr = num.toExponential();         // luôn dạng "x.xxxxxxen"
+    const [mantissa, expPart] = expStr.split("e-");
+
+    const zeroCount = parseInt(expPart, 10);
+    const cleanedMantissa = mantissa.replace('.', '');
+
+    // 3) Nếu <= 3 số 0: hiển thị bình thường
+    if (zeroCount <= 3) {
+        return `0.${"0".repeat(zeroCount)}${cleanedMantissa}`;
+    }
+
+    // 4) Nếu mantissa > 5 ký tự -> cắt còn 3 ký tự + ...
+    const lastDigit =
+        mantissa.length > 5
+            ? cleanedMantissa.slice(0, 3) + "..."
+            : cleanedMantissa;
+
+    // 5) Dạng subscript hoàn chỉnh
+    return `0.0<sub>${zeroCount}</sub>${lastDigit}`;
 }

@@ -38,6 +38,7 @@ export const DOM = {
         SendTxBtn: $('#SendTxBtn'),
         ReceiveTxBtn: $('#ReceiveTxBtn'),
         LockWalletManually: $('#LockWalletManually'),
+        TransactionList: $('#TransactionList'),
     },
     send:{
         RecipientInput: $('#SendAddress'),
