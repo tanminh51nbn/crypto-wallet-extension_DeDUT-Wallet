@@ -107,7 +107,7 @@ export class MnemonicController {
         }
     }
 
-    // đóng vai trò như tạo thẻ trong HTML
+    // đóng vai trò tạo thẻ trong HTML
     renderSeedPhrase(seedPhrase, displayElement, action) {
         if (!displayElement) return;
 

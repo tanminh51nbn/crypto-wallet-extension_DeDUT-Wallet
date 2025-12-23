@@ -2,9 +2,9 @@ import { argon2id } from '@noble/hashes/argon2.js';
 
 // === CẤU HÌNH ARGON2 (có thể tùy chỉnh) ===
 const ARGON2_CONFIG = {
-    t: 4,           // time cost (iterations)
-    m: 128 * 1024,   // memory cost in KiB → 64MB
-    p: 8,           // parallelism
+    t: 10,           // time cost (iterations)
+    m: 16*8 * 1024,   // memory cost in KiB → 128MB
+    p: 16,           // parallelism
     dkLen: 32       // output length: 32 bytes
 };
 
@@ -14,7 +14,7 @@ async function deriveArgon2Key(password, salt) {
     const pass = new TextEncoder().encode(password);
     const saltBytes = salt instanceof Uint8Array ? salt : new Uint8Array(salt);
 
-    // Dùng @noble/hashes/argon2id (thuần JS, không WASM, không eval)
+    // Dùng @noble/hashes/argon2id 
     const hash = argon2id(pass, saltBytes, ARGON2_CONFIG);
 
     // Import hash → Web Crypto AES key
@@ -28,6 +28,7 @@ async function deriveArgon2Key(password, salt) {
 
     // Zeroing sensitive data (tốt nhất có thể rầu)
     pass.fill(0);
+    hash.fill(0);
     if (Array.isArray(salt)) salt.fill(0);
 
     return aesKey;
@@ -65,7 +66,7 @@ export async function encryptData(privateKeyHex, password) {
         aesKey,
         data
     );
-
+    // data.fill(0);
     return {
         ciphertext: arrayBufferToBase64(ciphertext),
         salt: arrayBufferToBase64(salt),
@@ -88,6 +89,7 @@ export async function decryptData(encryptedData, password) {
         aesKey,
         ciphertext
     );
+    // aesKey.fill(0);
 
     return new TextDecoder().decode(decrypted);
 }

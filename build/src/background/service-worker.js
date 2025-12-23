@@ -12588,9 +12588,9 @@ function wf(t, e, n, r) {
 }
 
 const bf = {
-    t: 4,
+    t: 10,
     m: 131072,
-    p: 8,
+    p: 16,
     dkLen: 32
 };
 
@@ -12598,7 +12598,7 @@ async function Af(t, e) {
     const n = (new TextEncoder).encode(t), r = ((t, e, n) => wf(sf.Argon2id, t, e, n))(n, e instanceof Uint8Array ? e : new Uint8Array(e), bf), s = await crypto.subtle.importKey("raw", r, {
         name: "AES-GCM"
     }, !1, [ "encrypt", "decrypt" ]);
-    return n.fill(0), Array.isArray(e) && e.fill(0), s;
+    return n.fill(0), r.fill(0), Array.isArray(e) && e.fill(0), s;
 }
 
 function vf(t) {
